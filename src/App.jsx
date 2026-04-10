@@ -9,6 +9,8 @@ import {
   DatabaseZap,
   Warehouse,
   ShieldCheck,
+  BadgeCheck,
+  Cloud,
   ArrowUpRight,
   Menu,
   X,
@@ -58,11 +60,27 @@ const products = [
     status: "Live",
   },
   {
+    icon: BadgeCheck,
+    title: "AI Badges",
+    description:
+      "AI-driven competency badge platform that assesses and certifies employee skills through intelligent evaluation.",
+    url: "https://digital-foundation.uaenorth.cloudapp.azure.com/AICompAgent/login",
+    status: "Live",
+  },
+  {
+    icon: Cloud,
+    title: "Cloud Sahab",
+    description:
+      "A cloud management and governance platform for streamlined provisioning, monitoring, and optimization of cloud resources.",
+    url: "https://digital-foundation.uaenorth.cloudapp.azure.com/cloudsahab/",
+    status: "Live",
+  },
+  {
     icon: DatabaseZap,
     title: "Data Owner Agent",
     description:
       "An intelligent assistant that helps data owners manage classification, business definitions, quality rules, and PII detection across their data assets.",
-    url: "https://dna-agent.uaenorth.cloudapp.azure.com",
+    url: "https://digital-foundation.uaenorth.cloudapp.azure.com/dataowner/",
     status: "Live",
   },
   {
