@@ -1095,7 +1095,6 @@ export default function BoldApp({ user }) {
     <div className="min-h-screen bg-[#0a0a0a] font-body antialiased">
       <Navbar user={user} />
       <Hero />
-      <Stats />
       <Services />
       <Products />
       <CallToAction />
