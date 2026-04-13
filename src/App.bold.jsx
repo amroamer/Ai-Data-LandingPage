@@ -330,7 +330,7 @@ function Navbar({ user }) {
                 KPMG
               </span>
               <span className="text-[9px] font-medium tracking-[0.25em] text-accent/70 uppercase">
-                AI & Data
+                Digital Foundation
               </span>
             </div>
           </a>
@@ -572,7 +572,7 @@ function Hero() {
             }`}
             style={{ transitionDelay: "800ms" }}
           >
-            KPMG's AI & Data practice delivers enterprise-grade artificial
+            KPMG's Digital Foundation practice delivers enterprise-grade artificial
             intelligence — from strategy through implementation — to
             organizations shaping the Kingdom's transformation.
           </p>
@@ -885,7 +885,7 @@ function CallToAction() {
           </h2>
           <p className="mx-auto mt-8 max-w-lg text-lg leading-relaxed text-white/45">
             Partner with KPMG's Digital Foundation team to unlock the full
-            potential of AI & Data for your enterprise.
+            potential of Digital Foundation for your enterprise.
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
             <a
@@ -933,7 +933,7 @@ function Footer() {
                   KPMG
                 </div>
                 <div className="text-[9px] font-medium tracking-[0.2em] text-accent/50 uppercase">
-                  AI & Data
+                  Digital Foundation
                 </div>
               </div>
             </div>

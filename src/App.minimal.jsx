@@ -160,7 +160,7 @@ function Navbar({ user }) {
             <div className="flex flex-col">
               <span className="text-sm font-semibold text-warm-900">KPMG</span>
               <span className="text-[10px] font-medium tracking-[0.15em] text-kpmg uppercase">
-                AI & Data
+                Digital Foundation
               </span>
             </div>
           </a>
@@ -270,7 +270,7 @@ function Hero() {
             }`}
           >
             <p className="text-lg leading-relaxed text-warm-800/55">
-              KPMG's AI & Data practice delivers enterprise-grade artificial
+              KPMG's Digital Foundation practice delivers enterprise-grade artificial
               intelligence — from strategy through implementation — to
               organizations shaping the Kingdom's transformation.
             </p>
@@ -523,7 +523,7 @@ function Footer() {
               <div>
                 <div className="text-sm font-semibold text-white">KPMG</div>
                 <div className="text-[10px] font-medium tracking-[0.15em] text-white/40 uppercase">
-                  AI & Data
+                  Digital Foundation
                 </div>
               </div>
             </div>
