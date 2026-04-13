@@ -63,23 +63,15 @@ const products = [
     title: "Slides Generator",
     description:
       "AI-powered presentation builder that transforms briefs into polished, brand-compliant KPMG slide decks in seconds.",
-    url: "https://digital-foundation.uaenorth.cloudapp.azure.com/slide-generator/login",
+    url: "#",
     status: "Live",
   },
   {
-    icon: BadgeCheck,
-    title: "AI Badges",
+    icon: Warehouse,
+    title: "Sahab Data Platform",
     description:
-      "AI-driven competency badge platform that assesses and certifies employee skills through intelligent evaluation.",
-    url: "https://digital-foundation.uaenorth.cloudapp.azure.com/AICompAgent/login",
-    status: "Live",
-  },
-  {
-    icon: Cloud,
-    title: "Cloud Sahab",
-    description:
-      "A cloud management and governance platform for streamlined provisioning, monitoring, and optimization of cloud resources.",
-    url: "https://digital-foundation.uaenorth.cloudapp.azure.com/cloudsahab/",
+      "A centralized, governed data platform for ingestion, transformation, cataloging, and serving — built for Saudi enterprise scale.",
+    url: "#",
     status: "Live",
   },
   {
@@ -87,24 +79,16 @@ const products = [
     title: "Data Owner Agent",
     description:
       "An intelligent assistant that helps data owners manage classification, business definitions, quality rules, and PII detection across their data assets.",
-    url: "https://digital-foundation.uaenorth.cloudapp.azure.com/dataowner/",
+    url: "#",
     status: "Live",
   },
   {
-    icon: Warehouse,
-    title: "Data Platform",
-    description:
-      "A centralized, governed data platform for ingestion, transformation, cataloging, and serving — built for Saudi enterprise scale.",
-    url: "#",
-    status: "Coming Soon",
-  },
-  {
     icon: ShieldCheck,
-    title: "Compliance Assessment Agent",
+    title: "Compliance Platform",
     description:
       "Automated regulatory compliance checker against Saudi frameworks (NDMO, PDPL, SAMA, DGA, SDAIA).",
     url: "#",
-    status: "Coming Soon",
+    status: "Live",
   },
 ];
 
