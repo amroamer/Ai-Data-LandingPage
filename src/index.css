@@ -15,9 +15,15 @@
   --color-kpmg-light: #1a4fa0;
   --color-kpmg-glow: #4a7fd4;
 
-  /* Accent — mint green for CTAs */
-  --color-accent: #00e5a0;
-  --color-accent-dim: #00b880;
+  /* Accent — KPMG Light Blue for CTAs & interactive */
+  --color-accent: #0091DA;
+  --color-accent-dim: #005EB8;
+
+  /* KPMG secondary palette */
+  --color-medium-blue: #005EB8;
+  --color-light-blue: #0091DA;
+  --color-violet: #483698;
+  --color-green: #00A3A1;
 
   /* Dark theme (bold) — true blacks for BCG X feel */
   --color-navy: #0a0a0a;

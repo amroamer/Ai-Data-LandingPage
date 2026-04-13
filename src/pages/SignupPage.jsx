@@ -177,10 +177,10 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="group flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 text-[12px] font-bold tracking-[0.08em] text-[#0a0a0a] uppercase transition-all duration-300 hover:bg-white hover:shadow-lg hover:shadow-accent/15 disabled:opacity-50 cursor-pointer"
+              className="group flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 text-[12px] font-bold tracking-[0.08em] text-white uppercase transition-all duration-300 hover:bg-medium-blue hover:shadow-lg hover:shadow-accent/15 disabled:opacity-50 cursor-pointer"
             >
               {submitting ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#0a0a0a]/20 border-t-[#0a0a0a]" />
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (
                 <>
                   Create account

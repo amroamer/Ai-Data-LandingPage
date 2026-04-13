@@ -364,7 +364,7 @@ function Navbar({ user }) {
             ))}
             <a
               href="#products"
-              className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-6 py-2.5 text-[12px] font-bold tracking-[0.05em] text-[#0a0a0a] uppercase transition-all duration-300 hover:bg-white hover:shadow-lg hover:shadow-accent/20"
+              className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-6 py-2.5 text-[12px] font-bold tracking-[0.05em] text-white uppercase transition-all duration-300 hover:bg-medium-blue hover:shadow-lg hover:shadow-accent/20"
             >
               Explore Products
               <ArrowRight
@@ -400,7 +400,7 @@ function Navbar({ user }) {
             <a
               href="#products"
               onClick={() => setMobileOpen(false)}
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 text-[12px] font-bold tracking-[0.05em] text-[#0a0a0a] uppercase"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 text-[12px] font-bold tracking-[0.05em] text-white uppercase"
             >
               Explore Products
               <ArrowRight size={13} />
@@ -463,7 +463,7 @@ function Hero() {
           className="absolute bottom-[10%] -left-[10%] h-[400px] w-[400px] rounded-full opacity-40"
           style={{
             background:
-              "radial-gradient(circle, rgba(0, 229, 160, 0.08) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(0, 145, 218, 0.08) 0%, transparent 70%)",
             animation: "float-2 16s ease-in-out infinite",
           }}
         />
@@ -481,7 +481,7 @@ function Hero() {
         <div
           className="absolute inset-0 transition-opacity duration-[3000ms]"
           style={{
-            background: `radial-gradient(900px circle at ${mousePos.x}% ${mousePos.y}%, rgba(0, 229, 160, 0.03), transparent 40%)`,
+            background: `radial-gradient(900px circle at ${mousePos.x}% ${mousePos.y}%, rgba(0, 94, 184, 0.04), transparent 40%)`,
           }}
         />
 
@@ -568,7 +568,7 @@ function Hero() {
                     : "translate-y-12 opacity-0"
                 } ${
                   line === "Digital Future"
-                    ? "bg-gradient-to-r from-accent via-[#40f0c0] to-kpmg-glow bg-clip-text text-transparent"
+                    ? "bg-gradient-to-r from-light-blue via-medium-blue to-kpmg-glow bg-clip-text text-transparent"
                     : "text-white"
                 }`}
                 style={{
@@ -602,7 +602,7 @@ function Hero() {
           >
             <a
               href="#services"
-              className="group inline-flex items-center gap-3 rounded-full bg-accent px-8 py-4 font-display text-[12px] font-bold tracking-[0.08em] text-[#0a0a0a] uppercase transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-accent/15"
+              className="group inline-flex items-center gap-3 rounded-full bg-accent px-8 py-4 font-display text-[12px] font-bold tracking-[0.08em] text-white uppercase transition-all duration-300 hover:bg-medium-blue hover:shadow-xl hover:shadow-accent/15"
             >
               Our Services
               <ChevronDown
@@ -906,7 +906,7 @@ function CallToAction() {
           <div className="mt-12 flex flex-wrap justify-center gap-4">
             <a
               href="#products"
-              className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-9 py-4 text-[12px] font-bold tracking-[0.08em] text-[#0a0a0a] uppercase transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-accent/15"
+              className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-9 py-4 text-[12px] font-bold tracking-[0.08em] text-white uppercase transition-all duration-300 hover:bg-medium-blue hover:shadow-xl hover:shadow-accent/15"
             >
               Explore Products
               <ArrowRight

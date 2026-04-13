@@ -190,7 +190,7 @@ function UserFormModal({ user: editUser, onClose, onSaved }) {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-accent px-5 py-2 text-[12px] font-bold text-[#0a0a0a] hover:bg-white disabled:opacity-50 cursor-pointer"
+            className="rounded-lg bg-accent px-5 py-2 text-[12px] font-bold text-white hover:bg-medium-blue disabled:opacity-50 cursor-pointer"
           >
             {saving ? "Saving..." : isEdit ? "Update" : "Create"}
           </button>
@@ -250,7 +250,7 @@ function ResetPwModal({ user: target, onClose, onSaved }) {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-accent px-5 py-2 text-[12px] font-bold text-[#0a0a0a] hover:bg-white disabled:opacity-50 cursor-pointer"
+            className="rounded-lg bg-accent px-5 py-2 text-[12px] font-bold text-white hover:bg-medium-blue disabled:opacity-50 cursor-pointer"
           >
             {saving ? "Saving..." : "Reset password"}
           </button>
