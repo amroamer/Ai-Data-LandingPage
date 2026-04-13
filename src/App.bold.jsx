@@ -671,141 +671,62 @@ function Stats() {
    SERVICES — BCG X-STYLE TABBED
    ═══════════════════════════════════════════ */
 
+function ServiceCard({ icon: Icon, title, description }) {
+  return (
+    <div className="group rounded-2xl border border-white/[0.06] bg-[#111111] p-7 transition-all duration-500 hover:-translate-y-1 hover:border-kpmg-glow/20 hover:shadow-xl hover:shadow-kpmg/[0.06]">
+      <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-kpmg/10 text-kpmg-glow transition-colors duration-300 group-hover:bg-kpmg/15">
+        <Icon size={22} strokeWidth={1.5} />
+      </div>
+      <h3 className="mb-3 font-display text-base font-bold text-white">
+        {title}
+      </h3>
+      <p className="text-[13px] leading-relaxed text-white/35">
+        {description}
+      </p>
+    </div>
+  );
+}
+
 function Services() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [ref, inView] = useInView();
 
-  const active = services[activeIndex];
-  const ActiveIcon = active.icon;
-
-  function switchTab(index) {
-    if (index === activeIndex || isTransitioning) return;
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setActiveIndex(index);
-      setTimeout(() => setIsTransitioning(false), 50);
-    }, 250);
-  }
-
   return (
-    <section id="services" className="relative bg-[#0f0f0f] py-28 lg:py-40">
+    <section id="services" className="relative bg-[#0f0f0f] py-28 lg:py-36">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        {/* Header */}
         <Reveal>
           <span className="font-display text-[10px] font-semibold tracking-[0.35em] text-accent/60 uppercase">
             What We Do
           </span>
         </Reveal>
         <Reveal delay={100}>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-[-0.02em] text-white uppercase sm:text-5xl lg:text-6xl">
+          <h2 className="mt-4 font-display text-3xl font-extrabold tracking-[-0.01em] text-white sm:text-4xl">
             Our Services
           </h2>
         </Reveal>
         <Reveal delay={200}>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/35">
+          <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-white/35">
             Six integrated service pillars that take organizations from AI
             ambition to enterprise-scale impact.
           </p>
         </Reveal>
-        <Reveal delay={300}>
-          <a
-            href="#footer"
-            className="mt-8 inline-flex items-center gap-2 rounded-full border border-accent/15 bg-accent/[0.08] px-6 py-2.5 text-[11px] font-bold tracking-[0.1em] text-accent uppercase transition-all duration-300 hover:border-accent/30 hover:bg-accent/15"
-          >
-            Contact Us
-          </a>
-        </Reveal>
 
-        {/* Interactive service display card */}
         <div
           ref={ref}
-          className={`mt-20 overflow-hidden rounded-3xl border border-white/[0.06] bg-[#0a0a0a] transition-all duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            inView ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
-          }`}
+          className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
-          <div className="grid lg:grid-cols-[1fr_1.2fr_auto]">
-            {/* Left — Network Constellation */}
-            <div className="flex items-center justify-center border-b border-white/[0.04] p-8 lg:border-r lg:border-b-0 lg:p-12">
-              <div
-                className={`transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                  isTransitioning
-                    ? "scale-90 opacity-0"
-                    : "scale-100 opacity-100"
-                }`}
-              >
-                <NetworkGraphic icon={ActiveIcon} />
-              </div>
+          {services.map((service, i) => (
+            <div
+              key={service.title}
+              className={`transition-all duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                inView
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-10 opacity-0"
+              }`}
+              style={{ transitionDelay: inView ? `${i * 80}ms` : "0ms" }}
+            >
+              <ServiceCard {...service} />
             </div>
-
-            {/* Center — Service Content */}
-            <div className="flex flex-col justify-center border-b border-white/[0.04] p-8 lg:border-r lg:border-b-0 lg:p-12">
-              <div
-                className={`transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                  isTransitioning
-                    ? "translate-x-4 opacity-0"
-                    : "translate-x-0 opacity-100"
-                }`}
-              >
-                <span className="font-display text-[10px] font-semibold tracking-[0.3em] text-accent/50 uppercase">
-                  {String(activeIndex + 1).padStart(2, "0")} /{" "}
-                  {String(services.length).padStart(2, "0")}
-                </span>
-                <h3 className="mt-4 font-display text-2xl font-extrabold tracking-[-0.01em] text-white uppercase lg:text-3xl">
-                  {active.title}
-                </h3>
-                <p className="mt-5 text-[15px] leading-relaxed text-white/40">
-                  {active.description}
-                </p>
-                <a
-                  href="#footer"
-                  className="group mt-8 inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.15em] text-accent uppercase transition-colors duration-300 hover:text-white"
-                >
-                  Learn More
-                  <ArrowRight
-                    size={12}
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  />
-                </a>
-              </div>
-            </div>
-
-            {/* Right — Vertical Pill Tabs */}
-            <div className="flex gap-2 overflow-x-auto p-4 lg:flex-col lg:overflow-visible lg:p-5">
-              {services.map((service, i) => (
-                <button
-                  key={service.title}
-                  onClick={() => switchTab(i)}
-                  className={`group relative shrink-0 cursor-pointer rounded-2xl px-5 py-4 text-left transition-all duration-300 lg:w-48 ${
-                    i === activeIndex
-                      ? "border border-accent/20 bg-accent/[0.08]"
-                      : "border border-transparent hover:border-white/[0.06] hover:bg-white/[0.03]"
-                  }`}
-                >
-                  <div className="flex items-center gap-3 lg:flex-col lg:items-start lg:gap-2">
-                    <service.icon
-                      size={16}
-                      strokeWidth={1.5}
-                      className={`shrink-0 transition-colors duration-300 ${
-                        i === activeIndex
-                          ? "text-accent"
-                          : "text-white/20 group-hover:text-white/40"
-                      }`}
-                    />
-                    <span
-                      className={`whitespace-nowrap text-[11px] font-semibold tracking-[0.05em] transition-colors duration-300 lg:whitespace-normal ${
-                        i === activeIndex
-                          ? "text-white"
-                          : "text-white/25 group-hover:text-white/50"
-                      }`}
-                    >
-                      {service.title}
-                    </span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
