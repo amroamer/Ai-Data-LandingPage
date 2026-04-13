@@ -35,7 +35,7 @@ function ContactAdmin() {
           <div className="flex flex-col">
             <span className="font-display text-sm font-bold tracking-[0.08em] text-white uppercase">KPMG</span>
             <span className="text-[9px] font-medium tracking-[0.25em] text-accent/70 uppercase">
-              AI & Data
+              Digital Foundation
             </span>
           </div>
         </div>
@@ -119,7 +119,7 @@ function SelfReset() {
           <div className="flex flex-col">
             <span className="font-display text-sm font-bold tracking-[0.08em] text-white uppercase">KPMG</span>
             <span className="text-[9px] font-medium tracking-[0.25em] text-accent/70 uppercase">
-              AI & Data
+              Digital Foundation
             </span>
           </div>
         </div>

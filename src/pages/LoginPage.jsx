@@ -51,7 +51,7 @@ export default function LoginPage() {
           </div>
           <div className="flex flex-col">
             <span className="font-display text-sm font-bold tracking-[0.08em] text-white uppercase">KPMG</span>
-            <span className="text-[9px] font-medium tracking-[0.25em] text-accent/70 uppercase">AI & Data</span>
+            <span className="text-[9px] font-medium tracking-[0.25em] text-accent/70 uppercase">Digital Foundation</span>
           </div>
         </div>
 
@@ -61,7 +61,7 @@ export default function LoginPage() {
             Sign in
           </h1>
           <p className="mt-2 text-sm text-white/30">
-            Access the AI & Data platform
+            Access the Digital Foundation platform
           </p>
 
           {error && (
