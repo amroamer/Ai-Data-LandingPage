@@ -557,7 +557,7 @@ function Hero() {
                 }`}
                 style={{
                   transitionDelay: `${200 + i * 120}ms`,
-                  fontSize: "clamp(2.8rem, 5.5vw, 4.5rem)",
+                  fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)",
                 }}
               >
                 {line}
