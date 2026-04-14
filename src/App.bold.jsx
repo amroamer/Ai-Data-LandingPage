@@ -65,7 +65,7 @@ const services = [
 const products = [
   {
     icon: Presentation,
-    title: "Slides Generator",
+    title: "Creative Content Agent",
     description:
       "AI-powered presentation builder that transforms briefs into polished, brand-compliant KPMG slide decks in seconds.",
     url: "https://digital-foundation.uaenorth.cloudapp.azure.com/slide-generator/login",
