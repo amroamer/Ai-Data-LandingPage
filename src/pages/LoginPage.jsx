@@ -254,23 +254,7 @@ export default function LoginPage() {
         />
 
         {/* Content — typographic hero */}
-        <div className="relative z-10 flex h-full flex-col justify-between p-10 xl:p-14">
-          {/* Top badge */}
-          <div
-            className={`transition-all duration-700 ease-out ${
-              mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-            }`}
-            style={{ transitionDelay: "400ms" }}
-          >
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 backdrop-blur-sm">
-              <div className="h-1.5 w-1.5 rounded-full bg-[#0091DA] shadow-[0_0_8px_2px_rgba(0,145,218,0.4)]" />
-              <span className="text-[10px] font-semibold tracking-[0.25em] text-white/60 uppercase">
-                Digital Foundation
-              </span>
-            </div>
-          </div>
-
-          {/* Center area — large statement */}
+        <div className="relative z-10 flex h-full flex-col justify-center p-10 xl:p-14">
           <div
             className={`transition-all duration-[1000ms] ease-out ${
               mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
@@ -291,29 +275,6 @@ export default function LoginPage() {
               Enterprise-grade artificial intelligence — from strategy
               through implementation — powering the Kingdom's transformation.
             </p>
-          </div>
-
-          {/* Bottom stats */}
-          <div
-            className={`flex gap-10 border-t border-white/[0.08] pt-8 transition-all duration-700 ease-out ${
-              mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-            }`}
-            style={{ transitionDelay: "900ms" }}
-          >
-            {[
-              ["50+", "Solutions"],
-              ["200+", "Models"],
-              ["15+", "Organizations"],
-            ].map(([num, label]) => (
-              <div key={label}>
-                <div className="font-display text-2xl font-extrabold text-white">
-                  {num}
-                </div>
-                <div className="mt-1 text-[10px] font-semibold tracking-[0.15em] text-white/30 uppercase">
-                  {label}
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>
