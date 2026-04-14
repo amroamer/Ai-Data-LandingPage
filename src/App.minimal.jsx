@@ -70,7 +70,7 @@ const products = [
     icon: Warehouse,
     title: "Sahab Data Platform",
     description:
-      "A centralized, governed data platform for ingestion, transformation, cataloging, and serving — built for Saudi enterprise scale.",
+      "A centralized, governed data platform for ingestion, transformation, cataloging, and serving — built for Middle East enterprise scale.",
     url: "https://digital-foundation.uaenorth.cloudapp.azure.com/cloudsahab/",
     status: "Live",
   },
@@ -86,7 +86,7 @@ const products = [
     icon: ShieldCheck,
     title: "Compliance Platform",
     description:
-      "Automated regulatory compliance checker against Saudi frameworks (NDMO, PDPL, SAMA, DGA, SDAIA).",
+      "Automated regulatory compliance checker against regional frameworks (NDMO, PDPL, SAMA, DGA, SDAIA).",
     url: "https://digital-foundation.uaenorth.cloudapp.azure.com/AICompAgent/login",
     status: "Live",
   },
@@ -482,7 +482,7 @@ function Products() {
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-warm-800/45">
             Purpose-built applications and platforms designed to accelerate AI
-            adoption across Saudi enterprises.
+            adoption across the Middle East.
           </p>
         </div>
 
