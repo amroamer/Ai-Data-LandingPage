@@ -537,7 +537,7 @@ function Hero() {
           </div>
 
           {/* Headline — staggered reveal */}
-          <h1 className="font-display font-extrabold uppercase leading-[0.92] tracking-[-0.03em]">
+          <h1 className="max-w-3xl font-display font-extrabold uppercase leading-[0.92] tracking-[-0.03em]">
             {[
               "Transforming",
               "the Middle East's",
@@ -557,7 +557,7 @@ function Hero() {
                 }`}
                 style={{
                   transitionDelay: `${200 + i * 120}ms`,
-                  fontSize: "clamp(2.8rem, 7.5vw, 6rem)",
+                  fontSize: "clamp(2.8rem, 5.5vw, 4.5rem)",
                 }}
               >
                 {line}
