@@ -540,7 +540,7 @@ function Hero() {
           <h1 className="font-display font-extrabold uppercase leading-[0.92] tracking-[-0.03em]">
             {[
               "Transforming",
-              "Saudi Arabia's",
+              "the Middle East's",
               "Digital Future",
               "with AI",
             ].map((line, i) => (
@@ -574,7 +574,7 @@ function Hero() {
           >
             KPMG's Digital Foundation practice delivers enterprise-grade artificial
             intelligence — from strategy through implementation — to
-            organizations shaping the Kingdom's transformation.
+            organizations shaping the Middle East's transformation.
           </p>
 
           {/* CTAs */}
@@ -939,7 +939,7 @@ function Footer() {
             </div>
             <p className="mt-8 max-w-sm text-sm leading-relaxed text-white/25">
               Enterprise-grade artificial intelligence — from strategy through
-              implementation — for organizations shaping the Kingdom's digital
+              implementation — for organizations shaping the Middle East's digital
               transformation.
             </p>
           </div>
@@ -983,7 +983,7 @@ function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/[0.05] py-8">
           <p className="text-[11px] text-white/15">
-            &copy; 2026 KPMG Saudi Arabia &mdash; Digital Foundation
+            &copy; 2026 KPMG Middle East &mdash; Digital Foundation
           </p>
         </div>
       </div>

@@ -156,7 +156,7 @@ export default function LoginPage() {
           {/* Footer */}
           <div className="mt-10 sm:mt-16 border-t border-[#e8eaef] pt-6">
             <p className="text-[11px] text-[#b0b3be]">
-              &copy; 2026 KPMG Saudi Arabia. All rights reserved.
+              &copy; 2026 KPMG Middle East. All rights reserved.
             </p>
           </div>
         </div>
@@ -267,13 +267,13 @@ export default function LoginPage() {
             >
               Transforming
               <br />
-              Saudi Arabia's
+              the Middle East's
               <br />
               <span className="text-[#0091DA]">Digital Future</span>
             </h2>
             <p className="mt-4 lg:mt-6 max-w-sm text-[13px] lg:text-[14px] leading-relaxed text-white/35">
               Enterprise-grade artificial intelligence — from strategy
-              through implementation — powering the Kingdom's transformation.
+              through implementation — powering the Middle East's transformation.
             </p>
           </div>
         </div>

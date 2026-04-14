@@ -255,7 +255,7 @@ function Hero() {
             <h1 className="font-serif text-5xl font-light leading-[1.08] tracking-[-0.01em] text-warm-900 sm:text-6xl lg:text-7xl">
               Transforming
               <br />
-              Saudi Arabia's
+              the Middle East's
               <br />
               <span className="text-kpmg italic">Digital Future</span>
               <br />
@@ -272,7 +272,7 @@ function Hero() {
             <p className="text-lg leading-relaxed text-warm-800/55">
               KPMG's Digital Foundation practice delivers enterprise-grade artificial
               intelligence — from strategy through implementation — to
-              organizations shaping the Kingdom's transformation.
+              organizations shaping the Middle East's transformation.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <a
@@ -529,7 +529,7 @@ function Footer() {
             </div>
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/30">
               Enterprise-grade artificial intelligence — from strategy through
-              implementation — for organizations shaping the Kingdom's digital
+              implementation — for organizations shaping the Middle East's digital
               transformation.
             </p>
           </div>
@@ -575,7 +575,7 @@ function Footer() {
 
         <div className="mt-16 border-t border-white/10 pt-8">
           <p className="text-xs text-white/20">
-            &copy; 2026 KPMG Saudi Arabia &mdash; Digital Foundation
+            &copy; 2026 KPMG Middle East &mdash; Digital Foundation
           </p>
         </div>
       </div>
