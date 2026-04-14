@@ -683,12 +683,12 @@ function Services() {
           </span>
         </Reveal>
         <Reveal delay={100}>
-          <h2 className="mt-4 font-display text-3xl font-extrabold tracking-[-0.01em] text-white sm:text-4xl">
+          <h2 className="mt-4 font-display text-3xl font-extrabold tracking-[-0.02em] text-white uppercase sm:text-4xl lg:text-5xl">
             Our Services
           </h2>
         </Reveal>
         <Reveal delay={200}>
-          <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-white/35">
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-white/35 lg:text-lg">
             Six integrated service pillars that take organizations from AI
             ambition to enterprise-scale impact.
           </p>
@@ -804,7 +804,7 @@ function Products() {
   const [ref, inView] = useInView();
 
   return (
-    <section id="products" className="relative bg-[#0a0a0a] py-28 lg:py-40">
+    <section id="products" className="relative bg-[#0a0a0a] py-28 lg:py-36">
       {/* Top accent */}
       <div className="absolute top-0 right-0 left-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
 
@@ -815,14 +815,14 @@ function Products() {
           </span>
         </Reveal>
         <Reveal delay={100}>
-          <h2 className="mt-5 font-display text-4xl font-extrabold tracking-[-0.02em] text-white uppercase sm:text-5xl lg:text-6xl">
+          <h2 className="mt-4 font-display text-3xl font-extrabold tracking-[-0.02em] text-white uppercase sm:text-4xl lg:text-5xl">
             Our Products
           </h2>
         </Reveal>
         <Reveal delay={200}>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/35">
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-white/35 lg:text-lg">
             Purpose-built applications and platforms designed to accelerate AI
-            adoption across Saudi enterprises.
+            adoption across the Middle East.
           </p>
         </Reveal>
 
@@ -857,7 +857,7 @@ function CallToAction() {
   const [ref, inView] = useInView();
 
   return (
-    <section className="relative overflow-hidden py-32 lg:py-44">
+    <section className="relative overflow-hidden py-24 sm:py-32 lg:py-44">
       {/* Background */}
       <div
         className="absolute inset-0"
@@ -878,12 +878,12 @@ function CallToAction() {
             inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
           }`}
         >
-          <h2 className="font-display text-4xl font-extrabold tracking-[-0.02em] text-white uppercase sm:text-5xl lg:text-6xl">
+          <h2 className="font-display text-3xl font-extrabold tracking-[-0.02em] text-white uppercase sm:text-4xl lg:text-5xl">
             Ready to transform
             <br />
             <span className="text-accent">your organization?</span>
           </h2>
-          <p className="mx-auto mt-8 max-w-lg text-lg leading-relaxed text-white/45">
+          <p className="mx-auto mt-8 max-w-lg text-base leading-relaxed text-white/45 lg:text-lg">
             Partner with KPMG's Digital Foundation team to unlock the full
             potential of Digital Foundation for your enterprise.
           </p>
@@ -919,7 +919,7 @@ function Footer() {
   return (
     <footer id="footer" className="border-t border-white/[0.04] bg-[#080808]">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <div className="grid gap-16 py-20 lg:grid-cols-4 lg:py-24">
+        <div className="grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16 lg:py-24">
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3.5">
