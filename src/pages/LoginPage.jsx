@@ -41,19 +41,19 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen font-body">
       {/* ═══ LEFT — Form ═══ */}
-      <div className="flex w-full flex-col justify-center px-6 py-12 sm:px-12 lg:w-[48%] lg:px-20 xl:px-28">
+      <div className="flex w-full flex-col justify-center px-5 py-8 sm:px-10 md:w-[55%] md:px-12 lg:w-[48%] lg:px-20 xl:px-28">
         <div
           className={`mx-auto w-full max-w-[400px] transition-all duration-700 ease-out ${
             mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
         >
           {/* Logo */}
-          <div className="mb-12 flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-kpmg shadow-lg shadow-kpmg/15">
-              <span className="font-display text-[15px] font-extrabold text-white">K</span>
+          <div className="mb-8 sm:mb-12 flex items-center gap-3">
+            <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-kpmg shadow-lg shadow-kpmg/15">
+              <span className="font-display text-[14px] sm:text-[15px] font-extrabold text-white">K</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-display text-[15px] font-bold tracking-[0.06em] text-[#1a1a2e] uppercase">
+              <span className="font-display text-[14px] sm:text-[15px] font-bold tracking-[0.06em] text-[#1a1a2e] uppercase">
                 KPMG
               </span>
               <span className="text-[9px] font-semibold tracking-[0.22em] text-kpmg/60 uppercase">
@@ -63,10 +63,10 @@ export default function LoginPage() {
           </div>
 
           {/* Heading */}
-          <h1 className="font-display text-[28px] font-extrabold tracking-[-0.02em] text-[#1a1a2e]">
+          <h1 className="font-display text-[24px] sm:text-[28px] font-extrabold tracking-[-0.02em] text-[#1a1a2e]">
             Welcome back
           </h1>
-          <p className="mt-2 text-[14px] text-[#6b7084]">
+          <p className="mt-2 text-[13px] sm:text-[14px] text-[#6b7084]">
             Sign in to the Digital Foundation platform
           </p>
 
@@ -154,7 +154,7 @@ export default function LoginPage() {
           </p>
 
           {/* Footer */}
-          <div className="mt-16 border-t border-[#e8eaef] pt-6">
+          <div className="mt-10 sm:mt-16 border-t border-[#e8eaef] pt-6">
             <p className="text-[11px] text-[#b0b3be]">
               &copy; 2026 KPMG Saudi Arabia. All rights reserved.
             </p>
@@ -163,7 +163,7 @@ export default function LoginPage() {
       </div>
 
       {/* ═══ RIGHT — Visual panel ═══ */}
-      <div className="relative hidden overflow-hidden lg:flex lg:w-[52%]">
+      <div className="relative hidden overflow-hidden md:flex md:w-[45%] lg:w-[52%]">
         {/* Deep blue base */}
         <div className="absolute inset-0 bg-[#00205C]" />
 
@@ -201,7 +201,7 @@ export default function LoginPage() {
           >
             {/* Outer ring */}
             <div
-              className="h-[420px] w-[420px] rounded-full border-[1.5px] border-white/[0.07] xl:h-[480px] xl:w-[480px]"
+              className="h-[280px] w-[280px] rounded-full border-[1.5px] border-white/[0.07] lg:h-[420px] lg:w-[420px] xl:h-[480px] xl:w-[480px]"
               style={{ animation: "float-2 25s ease-in-out infinite" }}
             >
               {/* Middle ring */}
@@ -254,7 +254,7 @@ export default function LoginPage() {
         />
 
         {/* Content — typographic hero */}
-        <div className="relative z-10 flex h-full flex-col justify-center p-10 xl:p-14">
+        <div className="relative z-10 flex h-full flex-col justify-center p-6 lg:p-10 xl:p-14">
           <div
             className={`transition-all duration-[1000ms] ease-out ${
               mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
@@ -263,7 +263,7 @@ export default function LoginPage() {
           >
             <h2
               className="font-display font-extrabold uppercase leading-[0.95] tracking-[-0.03em] text-white"
-              style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.8rem)" }}
+              style={{ fontSize: "clamp(1.6rem, 3.5vw, 3.8rem)" }}
             >
               Transforming
               <br />
@@ -271,7 +271,7 @@ export default function LoginPage() {
               <br />
               <span className="text-[#0091DA]">Digital Future</span>
             </h2>
-            <p className="mt-6 max-w-sm text-[14px] leading-relaxed text-white/35">
+            <p className="mt-4 lg:mt-6 max-w-sm text-[13px] lg:text-[14px] leading-relaxed text-white/35">
               Enterprise-grade artificial intelligence — from strategy
               through implementation — powering the Kingdom's transformation.
             </p>
