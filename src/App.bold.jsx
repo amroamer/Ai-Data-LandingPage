@@ -68,7 +68,7 @@ const products = [
     title: "Creative Content Agent",
     description:
       "AI-powered presentation builder that transforms briefs into polished, brand-compliant KPMG slide decks in seconds.",
-    url: "https://digital-foundation.uaenorth.cloudapp.azure.com/slide-generator/login",
+    url: "https://digital-foundation.uksouth.cloudapp.azure.com/slide-generator/login",
     status: "Live",
   },
   {
@@ -76,7 +76,7 @@ const products = [
     title: "Sahab Data Platform",
     description:
       "A centralized, governed data platform for ingestion, transformation, cataloging, and serving — built for Middle East enterprise scale.",
-    url: "https://digital-foundation.uaenorth.cloudapp.azure.com/cloudsahab/",
+    url: "https://digital-foundation.uksouth.cloudapp.azure.com/cloudsahab/",
     status: "Live",
   },
   {
@@ -84,7 +84,7 @@ const products = [
     title: "Data Owner Agent",
     description:
       "An intelligent assistant that helps data owners manage classification, business definitions, quality rules, and PII detection across their data assets.",
-    url: "https://digital-foundation.uaenorth.cloudapp.azure.com/dataowner/",
+    url: "https://digital-foundation.uksouth.cloudapp.azure.com/dataowner/",
     status: "Live",
   },
   {
@@ -92,7 +92,7 @@ const products = [
     title: "Compliance Platform",
     description:
       "Automated regulatory compliance checker against regional frameworks (NDMO, PDPL, SAMA, DGA, SDAIA).",
-    url: "https://digital-foundation.uaenorth.cloudapp.azure.com/AICompAgent/login",
+    url: "https://digital-foundation.uksouth.cloudapp.azure.com/AICompAgent/login",
     status: "Live",
   },
 ];
