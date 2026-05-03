@@ -13,6 +13,9 @@ from app.routers import auth, settings as settings_router, users
 
 logger = logging.getLogger("auth-service")
 
+# Slugs of every app that participates in this SSO universe. The seed code
+# below grants the bootstrap admin access to all of them. Must stay in sync
+# with the same constant in routers/auth.py.
 VALID_APP_SLUGS = [
     "slides-generator",
     "ai-badges",
@@ -24,9 +27,12 @@ VALID_APP_SLUGS = [
 
 
 async def seed_database() -> None:
-    """Create default admin, settings, and app access on first startup."""
+    """Create the bootstrap admin, default settings, and admin app-access on first start.
+
+    Idempotent: safe to run on every startup. Creates an admin only when no
+    admin exists yet, and only inserts default settings rows that are missing.
+    """
     async with async_session() as db:
-        # Check for existing admin
         result = await db.execute(select(User).where(User.role == UserRole.admin).limit(1))
         admin = result.scalar_one_or_none()
 
@@ -41,13 +47,11 @@ async def seed_database() -> None:
             db.add(admin)
             await db.flush()
 
-            # Grant admin access to all apps
             for slug in VALID_APP_SLUGS:
                 db.add(AppAccess(user_id=admin.id, app_slug=slug, has_access=True))
 
             logger.info("Default admin created: %s", settings.DEFAULT_ADMIN_EMAIL)
 
-        # Ensure default settings exist
         result = await db.execute(select(Setting).where(Setting.key == "signup_enabled"))
         if result.scalar_one_or_none() is None:
             db.add(Setting(key="signup_enabled", value="true"))
@@ -58,13 +62,18 @@ async def seed_database() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: create tables and seed
+    """ASGI lifespan handler.
+
+    On startup: ensures all tables exist (``create_all`` is a no-op for
+    already-present tables) and runs the idempotent seeder. On shutdown:
+    disposes of the engine's connection pool cleanly so the process can
+    exit without dangling sockets.
+    """
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     await seed_database()
     logger.info("Auth service started")
     yield
-    # Shutdown
     await engine.dispose()
 
 
@@ -83,9 +92,11 @@ app.include_router(settings_router.router)
 
 @app.get("/", include_in_schema=False)
 async def root():
+    """Root convenience redirect: bounces visitors to the Swagger UI."""
     return RedirectResponse(url="/auth/api/docs")
 
 
 @app.get("/auth/api/health")
 async def health():
+    """Liveness probe used by orchestrators (Docker, Kubernetes, etc.)."""
     return {"status": "ok"}

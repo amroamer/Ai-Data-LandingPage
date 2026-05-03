@@ -13,6 +13,12 @@ target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
+    """Render migrations as raw SQL without connecting to a database.
+
+    Used when generating SQL scripts (``alembic upgrade head --sql``) for
+    DBAs to run by hand. ``literal_binds=True`` inlines bind parameters so
+    the resulting SQL is directly executable.
+    """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(url=url, target_metadata=target_metadata, literal_binds=True, dialect_opts={"paramstyle": "named"})
     with context.begin_transaction():
@@ -20,6 +26,10 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
+    """Apply migrations against a live database connection.
+
+    The default path used by ``alembic upgrade head`` in CI/CD and locally.
+    """
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",

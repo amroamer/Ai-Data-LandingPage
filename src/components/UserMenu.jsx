@@ -2,14 +2,26 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut, Settings, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useT } from "../i18n/i18n";
 
+/**
+ * Avatar button + dropdown showing the signed-in user's name, email, an
+ * admin-only "Settings" link, and a logout action. Closes when the user
+ * clicks anywhere outside the menu.
+ *
+ * The `variant` prop swaps the colour scheme: `"bold"` (default) is the
+ * dark theme used on the landing page; any other value renders the light
+ * theme intended for warm/cream backgrounds.
+ */
 export default function UserMenu({ variant = "bold" }) {
   const { user, logout } = useAuth();
+  const t = useT();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    /** Close the menu on any click that lands outside the wrapper. */
     const handler = (e) => {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
     };
@@ -28,6 +40,7 @@ export default function UserMenu({ variant = "bold" }) {
 
   const isDark = variant === "bold";
 
+  /** Sign the user out and bounce them to the login page. */
   async function handleLogout() {
     await logout();
     navigate("/login");
@@ -106,7 +119,7 @@ export default function UserMenu({ variant = "bold" }) {
                 }`}
               >
                 <Settings size={15} />
-                Settings
+                {t("userMenu.settings")}
               </button>
             )}
             <button
@@ -118,7 +131,7 @@ export default function UserMenu({ variant = "bold" }) {
               }`}
             >
               <LogOut size={15} />
-              Log out
+              {t("userMenu.logout")}
             </button>
           </div>
         </div>

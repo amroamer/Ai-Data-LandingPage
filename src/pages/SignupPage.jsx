@@ -2,15 +2,23 @@ import { useState, useMemo } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, ArrowRight, Check, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useT } from "../i18n/i18n";
 
+// Password validation rules. The label is an i18n key; the test runs against
+// the raw input. Order here matters — it's the order shown to the user.
 const RULES = [
-  { label: "At least 8 characters", test: (p) => p.length >= 8 },
-  { label: "Contains a letter", test: (p) => /[a-zA-Z]/.test(p) },
-  { label: "Contains a number", test: (p) => /\d/.test(p) },
+  { labelKey: "auth.signup.rules.minLength", test: (p) => p.length >= 8 },
+  { labelKey: "auth.signup.rules.hasLetter", test: (p) => /[a-zA-Z]/.test(p) },
+  { labelKey: "auth.signup.rules.hasNumber", test: (p) => /\d/.test(p) },
 ];
 
+/**
+ * Self-service signup page. Enforces the password rules client-side as a UX
+ * hint, then submits to the backend (which re-validates server-side).
+ */
 export default function SignupPage() {
   const { user, loading, signup } = useAuth();
+  const t = useT();
   const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,11 +35,15 @@ export default function SignupPage() {
   if (loading) return null;
   if (user) return <Navigate to="/" replace />;
 
+  /**
+   * Validates the password meets the rules and matches the confirmation,
+   * then submits the signup request and navigates to the home route on success.
+   */
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
-    if (!passwordValid) return setError("Password does not meet requirements");
-    if (!confirmMatch) return setError("Passwords do not match");
+    if (!passwordValid) return setError(t("auth.signup.errors.passwordRequirements"));
+    if (!confirmMatch) return setError(t("auth.signup.errors.passwordMismatch"));
     setSubmitting(true);
     try {
       await signup(email, password, fullName);
@@ -61,21 +73,21 @@ export default function SignupPage() {
         {/* Logo */}
         <div className="mb-10 flex items-center justify-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-kpmg">
-            <span className="font-display text-sm font-extrabold text-white">K</span>
+            <span className="font-display text-sm font-extrabold text-white">{t("brand.logoMark")}</span>
           </div>
           <div className="flex flex-col">
-            <span className="font-display text-sm font-bold tracking-[0.08em] text-white uppercase">KPMG</span>
-            <span className="text-[9px] font-medium tracking-[0.25em] text-accent/70 uppercase">Digital Foundation</span>
+            <span className="font-display text-sm font-bold tracking-[0.08em] text-white uppercase">{t("brand.name")}</span>
+            <span className="text-[9px] font-medium tracking-[0.25em] text-accent/70 uppercase">{t("brand.tagline")}</span>
           </div>
         </div>
 
         {/* Card */}
         <div className="rounded-2xl border border-white/[0.06] bg-[#111111] p-8 shadow-2xl shadow-black/40 sm:p-10">
           <h1 className="font-display text-2xl font-extrabold tracking-[-0.01em] text-white uppercase">
-            Create account
+            {t("auth.signup.title")}
           </h1>
           <p className="mt-2 text-sm text-white/30">
-            Join the Digital Foundation platform
+            {t("auth.signup.subtitle")}
           </p>
 
           {error && (
@@ -87,7 +99,7 @@ export default function SignupPage() {
           <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             <div>
               <label className="mb-2 block text-[11px] font-semibold tracking-[0.1em] text-white/30 uppercase">
-                Full name
+                {t("auth.signup.fullNameLabel")}
               </label>
               <input
                 type="text"
@@ -95,13 +107,13 @@ export default function SignupPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-full rounded-xl border border-white/[0.08] bg-[#0a0a0a] px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-accent/40 focus:outline-none focus:ring-1 focus:ring-accent/20"
-                placeholder="Full name"
+                placeholder={t("auth.signup.fullNamePlaceholder")}
               />
             </div>
 
             <div>
               <label className="mb-2 block text-[11px] font-semibold tracking-[0.1em] text-white/30 uppercase">
-                Email
+                {t("auth.signup.emailLabel")}
               </label>
               <input
                 type="email"
@@ -109,13 +121,13 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-xl border border-white/[0.08] bg-[#0a0a0a] px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-accent/40 focus:outline-none focus:ring-1 focus:ring-accent/20"
-                placeholder="name@kpmg.com"
+                placeholder={t("auth.signup.emailPlaceholder")}
               />
             </div>
 
             <div>
               <label className="mb-2 block text-[11px] font-semibold tracking-[0.1em] text-white/30 uppercase">
-                Password
+                {t("auth.signup.passwordLabel")}
               </label>
               <div className="relative">
                 <input
@@ -124,7 +136,7 @@ export default function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full rounded-xl border border-white/[0.08] bg-[#0a0a0a] px-4 py-3 pr-11 text-sm text-white placeholder:text-white/20 focus:border-accent/40 focus:outline-none focus:ring-1 focus:ring-accent/20"
-                  placeholder="Create password"
+                  placeholder={t("auth.signup.passwordPlaceholder")}
                 />
                 <button
                   type="button"
@@ -139,14 +151,14 @@ export default function SignupPage() {
               {password.length > 0 && (
                 <div className="mt-3 space-y-1.5">
                   {RULES.map((rule, i) => (
-                    <div key={rule.label} className="flex items-center gap-2">
+                    <div key={rule.labelKey} className="flex items-center gap-2">
                       {ruleResults[i] ? (
                         <Check size={12} className="text-accent" />
                       ) : (
                         <X size={12} className="text-white/20" />
                       )}
                       <span className={`text-[11px] ${ruleResults[i] ? "text-accent/70" : "text-white/25"}`}>
-                        {rule.label}
+                        {t(rule.labelKey)}
                       </span>
                     </div>
                   ))}
@@ -156,7 +168,7 @@ export default function SignupPage() {
 
             <div>
               <label className="mb-2 block text-[11px] font-semibold tracking-[0.1em] text-white/30 uppercase">
-                Confirm password
+                {t("auth.signup.confirmLabel")}
               </label>
               <input
                 type="password"
@@ -170,7 +182,7 @@ export default function SignupPage() {
                       : "border-red-500/30 focus:border-red-500/40 focus:ring-red-500/20"
                     : "border-white/[0.08] focus:border-accent/40 focus:ring-accent/20"
                 }`}
-                placeholder="Repeat password"
+                placeholder={t("auth.signup.confirmPlaceholder")}
               />
             </div>
 
@@ -183,7 +195,7 @@ export default function SignupPage() {
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (
                 <>
-                  Create account
+                  {t("auth.signup.submit")}
                   <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
                 </>
               )}
@@ -191,9 +203,9 @@ export default function SignupPage() {
           </form>
 
           <div className="mt-6 text-center text-[13px] text-white/25">
-            Already have an account?{" "}
+            {t("auth.signup.haveAccount")}{" "}
             <Link to="/login" className="font-semibold text-accent transition-colors hover:text-white">
-              Sign in
+              {t("auth.signup.signIn")}
             </Link>
           </div>
         </div>

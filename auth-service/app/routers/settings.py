@@ -12,6 +12,7 @@ router = APIRouter(prefix="/auth/api/settings", tags=["settings"], dependencies=
 
 @router.get("", response_model=list[SettingOut])
 async def get_settings(db: AsyncSession = Depends(get_db)):
+    """List every global setting, alphabetically by key. Admin only."""
     result = await db.execute(select(Setting).order_by(Setting.key))
     return result.scalars().all()
 
@@ -22,6 +23,12 @@ async def update_settings(
     db: AsyncSession = Depends(get_db),
     admin: User = Depends(require_admin),
 ):
+    """Upsert one or more global settings and return the full updated list.
+
+    Each entry in ``body.settings`` either updates the matching key or
+    creates a new row when the key doesn't exist yet. ``updated_by`` is
+    stamped with the calling admin's id so we can audit who flipped what.
+    """
     for key, value in body.settings.items():
         result = await db.execute(select(Setting).where(Setting.key == key))
         setting = result.scalar_one_or_none()

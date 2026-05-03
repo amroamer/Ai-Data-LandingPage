@@ -1,0 +1,237 @@
+{
+  "language": {
+    "name": "English",
+    "switchTo": "العربية"
+  },
+  "brand": {
+    "name": "KPMG",
+    "tagline": "Digital Foundation",
+    "logoMark": "K"
+  },
+  "nav": {
+    "services": "Services",
+    "products": "Products",
+    "contact": "Contact",
+    "exploreProducts": "Explore Products"
+  },
+  "hero": {
+    "badge": "Digital Foundation",
+    "headline": {
+      "line1": "Transforming",
+      "line2": "the Middle East's",
+      "line3": "Digital Future",
+      "line4": "with AI"
+    },
+    "description": "KPMG's Digital Foundation practice delivers enterprise-grade artificial intelligence — from strategy through implementation — to organizations shaping the Middle East's transformation.",
+    "ctaPrimary": "Our Services",
+    "ctaSecondary": "View Products",
+    "scroll": "Scroll"
+  },
+  "stats": {
+    "aiSolutions": "AI Solutions Delivered",
+    "enterpriseModels": "Enterprise Models",
+    "organizations": "Organizations Served",
+    "servicePillars": "Service Pillars"
+  },
+  "services": {
+    "eyebrow": "What We Do",
+    "title": "Our Services",
+    "intro": "Six integrated service pillars that take organizations from AI ambition to enterprise-scale impact.",
+    "items": {
+      "readiness": {
+        "title": "AI Readiness Assessment",
+        "description": "Evaluate your organization's maturity, infrastructure, talent, and governance readiness to adopt AI at scale."
+      },
+      "strategies": {
+        "title": "AI Strategies",
+        "description": "Define a tailored AI roadmap aligned with your national and organizational objectives, from vision to execution."
+      },
+      "platforms": {
+        "title": "AI Platforms",
+        "description": "Design and implement enterprise-grade AI platforms that enable scalable model development, deployment, and monitoring."
+      },
+      "factories": {
+        "title": "AI Factories",
+        "description": "Operationalize AI delivery through industrialized, repeatable frameworks — from data pipelines to model lifecycle management."
+      },
+      "solutions": {
+        "title": "AI Solutions",
+        "description": "Deliver purpose-built AI applications that solve real business problems — from intelligent automation to predictive analytics."
+      },
+      "cloud": {
+        "title": "Cloud",
+        "description": "Architect and manage secure, scalable cloud infrastructure — from migration strategy to multi-cloud governance and cost optimization."
+      }
+    }
+  },
+  "products": {
+    "eyebrow": "What We Build",
+    "title": "Our Products",
+    "intro": "Purpose-built applications and platforms designed to accelerate AI adoption across the Middle East.",
+    "statusLive": "Live",
+    "launch": "Launch Application",
+    "items": {
+      "creativeContent": {
+        "title": "Creative Content Agent",
+        "description": "AI-powered presentation builder that transforms briefs into polished, brand-compliant KPMG slide decks in seconds."
+      },
+      "sahab": {
+        "title": "Sahab Data Platform",
+        "description": "A centralized, governed data platform for ingestion, transformation, cataloging, and serving — built for Middle East enterprise scale."
+      },
+      "dataOwner": {
+        "title": "Data Owner Agent",
+        "description": "An intelligent assistant that helps data owners manage classification, business definitions, quality rules, and PII detection across their data assets."
+      },
+      "compliance": {
+        "title": "Compliance Platform",
+        "description": "Automated regulatory compliance checker against regional frameworks (NDMO, PDPL, SAMA, DGA, SDAIA)."
+      }
+    }
+  },
+  "cta": {
+    "headlineLine1": "Ready to transform",
+    "headlineLine2": "your organization?",
+    "description": "Partner with KPMG's Digital Foundation team to unlock the full potential of Digital Foundation for your enterprise.",
+    "primary": "Explore Products",
+    "secondary": "Contact Us"
+  },
+  "footer": {
+    "description": "Enterprise-grade artificial intelligence — from strategy through implementation — for organizations shaping the Middle East's digital transformation.",
+    "navigation": "Navigation",
+    "capabilities": "Capabilities",
+    "copyright": "© 2026 KPMG Middle East — Digital Foundation"
+  },
+  "userMenu": {
+    "settings": "Settings",
+    "logout": "Log out"
+  },
+  "auth": {
+    "common": {
+      "back": "Back",
+      "backToSignIn": "Back to sign in",
+      "backToHome": "Back to home",
+      "copyright": "© 2026 KPMG Middle East. All rights reserved."
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to the Digital Foundation platform",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "name@kpmg.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "heroLine1": "Transforming",
+      "heroLine2": "the Middle East's",
+      "heroLine3": "Digital Future",
+      "heroDescription": "Enterprise-grade artificial intelligence — from strategy through implementation — powering the Middle East's transformation."
+    },
+    "signup": {
+      "title": "Create account",
+      "subtitle": "Join the Digital Foundation platform",
+      "fullNameLabel": "Full name",
+      "fullNamePlaceholder": "Full name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "name@kpmg.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Create password",
+      "confirmLabel": "Confirm password",
+      "confirmPlaceholder": "Repeat password",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "rules": {
+        "minLength": "At least 8 characters",
+        "hasLetter": "Contains a letter",
+        "hasNumber": "Contains a number"
+      },
+      "errors": {
+        "passwordRequirements": "Password does not meet requirements",
+        "passwordMismatch": "Passwords do not match"
+      }
+    },
+    "forgot": {
+      "contactTitle": "Reset password",
+      "contactBody": "Password resets are handled by your administrator. Please contact your admin to reset your password.",
+      "contactLabel": "Admin contact",
+      "contactEmail": "admin@kpmg.com",
+      "selfTitle": "Change password",
+      "selfSubtitle": "Update your account password",
+      "currentLabel": "Current password",
+      "currentPlaceholder": "Enter current password",
+      "newLabel": "New password",
+      "newPlaceholder": "Min 8 chars, letter + number",
+      "confirmLabel": "Confirm new password",
+      "confirmPlaceholder": "Repeat new password",
+      "submit": "Change password",
+      "success": "Password changed successfully.",
+      "errors": {
+        "weakPassword": "Password must be 8+ chars with a letter and number",
+        "mismatch": "Passwords do not match"
+      }
+    }
+  },
+  "settings": {
+    "home": "Home",
+    "title": "Settings",
+    "globalSettings": "Global Settings",
+    "publicSignup": "Public signup",
+    "publicSignupDescription": "Allow new users to create accounts",
+    "users": "Users",
+    "createUser": "Create user",
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "appAccess": "App access",
+    "actions": {
+      "edit": "Edit",
+      "resetPassword": "Reset password",
+      "deactivate": "Deactivate",
+      "appAccessTitle": "App access"
+    },
+    "roles": {
+      "user": "User",
+      "admin": "Admin"
+    },
+    "modals": {
+      "createUser": "Create user",
+      "editUser": "Edit user",
+      "resetPasswordTitle": "Reset password — {name}",
+      "fullNameLabel": "Full name",
+      "fullNamePlaceholder": "Full name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "name@kpmg.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Min 8 chars, letter + number",
+      "newPasswordLabel": "New password",
+      "roleLabel": "Role",
+      "accountActive": "Account active",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "create": "Create",
+      "update": "Update",
+      "resetPasswordSubmit": "Reset password"
+    },
+    "appSlugs": {
+      "slides-generator": "Slides Generator",
+      "ai-badges": "AI Badges",
+      "cloud-sahab": "Cloud Sahab",
+      "data-owner": "Data Owner Agent",
+      "ai-data-landing": "AI Data Landing",
+      "ragflow": "RAGFlow"
+    }
+  },
+  "errors": {
+    "requestFailed": "Request failed",
+    "useAuthOutsideProvider": "useAuth must be used within AuthProvider"
+  }
+}

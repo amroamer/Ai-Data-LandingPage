@@ -1,10 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, ArrowRight, Globe } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useI18n, useT } from "../i18n/i18n";
 
+/**
+ * Login page. Renders a credentials form on the left and a decorative panel
+ * on the right (visible at md+). On successful sign-in the user is sent to
+ * the protected home route; if already signed in, redirect away immediately.
+ */
 export default function LoginPage() {
   const { user, loading, login } = useAuth();
+  const t = useT();
+  const { lang, setLang } = useI18n();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +29,11 @@ export default function LoginPage() {
   if (loading) return null;
   if (user) return <Navigate to="/" replace />;
 
+  /**
+   * Submit handler for the sign-in form. Wraps the async login call so the
+   * button can show a spinner while the request is in flight, and surfaces
+   * the server's error message on failure.
+   */
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -47,27 +60,36 @@ export default function LoginPage() {
             mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
         >
-          {/* Logo */}
-          <div className="mb-8 sm:mb-12 flex items-center gap-3">
-            <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-kpmg shadow-lg shadow-kpmg/15">
-              <span className="font-display text-[14px] sm:text-[15px] font-extrabold text-white">K</span>
+          {/* Logo + language switcher row */}
+          <div className="mb-8 sm:mb-12 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-kpmg shadow-lg shadow-kpmg/15">
+                <span className="font-display text-[14px] sm:text-[15px] font-extrabold text-white">{t("brand.logoMark")}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-display text-[14px] sm:text-[15px] font-bold tracking-[0.06em] text-[#1a1a2e] uppercase">
+                  {t("brand.name")}
+                </span>
+                <span className="text-[9px] font-semibold tracking-[0.22em] text-kpmg/60 uppercase">
+                  {t("brand.tagline")}
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="font-display text-[14px] sm:text-[15px] font-bold tracking-[0.06em] text-[#1a1a2e] uppercase">
-                KPMG
-              </span>
-              <span className="text-[9px] font-semibold tracking-[0.22em] text-kpmg/60 uppercase">
-                Digital Foundation
-              </span>
-            </div>
+            <button
+              onClick={() => setLang(lang === "en" ? "ar" : "en")}
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#d4d8e1] px-3 py-1.5 text-[11px] font-bold tracking-[0.06em] uppercase text-[#5a5d6a] hover:border-kpmg/40 hover:text-kpmg cursor-pointer transition-colors"
+            >
+              <Globe size={12} />
+              {t("language.switchTo")}
+            </button>
           </div>
 
           {/* Heading */}
           <h1 className="font-display text-[24px] sm:text-[28px] font-extrabold tracking-[-0.02em] text-[#1a1a2e]">
-            Welcome back
+            {t("auth.login.title")}
           </h1>
           <p className="mt-2 text-[13px] sm:text-[14px] text-[#6b7084]">
-            Sign in to the Digital Foundation platform
+            {t("auth.login.subtitle")}
           </p>
 
           {/* Error */}
@@ -81,7 +103,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             <div>
               <label className="mb-1.5 block text-[13px] font-semibold text-[#3a3d4a]">
-                Email address
+                {t("auth.login.emailLabel")}
               </label>
               <input
                 type="email"
@@ -89,20 +111,20 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={inputClass}
-                placeholder="name@kpmg.com"
+                placeholder={t("auth.login.emailPlaceholder")}
               />
             </div>
 
             <div>
               <div className="mb-1.5 flex items-center justify-between">
                 <label className="text-[13px] font-semibold text-[#3a3d4a]">
-                  Password
+                  {t("auth.login.passwordLabel")}
                 </label>
                 <Link
                   to="/forgot-password"
                   className="text-[12px] font-medium text-kpmg/70 transition-colors hover:text-kpmg"
                 >
-                  Forgot password?
+                  {t("auth.login.forgotPassword")}
                 </Link>
               </div>
               <div className="relative">
@@ -112,7 +134,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={inputClass + " pr-11"}
-                  placeholder="Enter your password"
+                  placeholder={t("auth.login.passwordPlaceholder")}
                 />
                 <button
                   type="button"
@@ -133,7 +155,7 @@ export default function LoginPage() {
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (
                 <>
-                  Sign in
+                  {t("auth.login.submit")}
                   <ArrowRight
                     size={15}
                     className="transition-transform duration-200 group-hover:translate-x-0.5"
@@ -144,19 +166,19 @@ export default function LoginPage() {
           </form>
 
           <p className="mt-8 text-center text-[13px] text-[#8a8d9a]">
-            Don't have an account?{" "}
+            {t("auth.login.noAccount")}{" "}
             <Link
               to="/signup"
               className="font-semibold text-kpmg transition-colors hover:text-kpmg-dark"
             >
-              Create account
+              {t("auth.login.createAccount")}
             </Link>
           </p>
 
           {/* Footer */}
           <div className="mt-10 sm:mt-16 border-t border-[#e8eaef] pt-6">
             <p className="text-[11px] text-[#b0b3be]">
-              &copy; 2026 KPMG Middle East. All rights reserved.
+              {t("auth.common.copyright")}
             </p>
           </div>
         </div>
@@ -265,15 +287,14 @@ export default function LoginPage() {
               className="font-display font-extrabold uppercase leading-[0.95] tracking-[-0.03em] text-white"
               style={{ fontSize: "clamp(1.6rem, 3.5vw, 3.8rem)" }}
             >
-              Transforming
+              {t("auth.login.heroLine1")}
               <br />
-              the Middle East's
+              {t("auth.login.heroLine2")}
               <br />
-              <span className="text-[#0091DA]">Digital Future</span>
+              <span className="text-[#0091DA]">{t("auth.login.heroLine3")}</span>
             </h2>
             <p className="mt-4 lg:mt-6 max-w-sm text-[13px] lg:text-[14px] leading-relaxed text-white/35">
-              Enterprise-grade artificial intelligence — from strategy
-              through implementation — powering the Middle East's transformation.
+              {t("auth.login.heroDescription")}
             </p>
           </div>
         </div>

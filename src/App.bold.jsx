@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import UserMenu from "./components/UserMenu";
+import { useI18n, useT } from "./i18n/i18n";
 import {
   Brain,
   Route,
@@ -10,104 +11,72 @@ import {
   DatabaseZap,
   Warehouse,
   ShieldCheck,
-  BadgeCheck,
   Cloud,
   ArrowUpRight,
   ArrowRight,
   Menu,
   X,
   ChevronDown,
+  Globe,
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════
    DATA
    ═══════════════════════════════════════════ */
 
+// Service catalogue. Visual identity (icon) lives with the data; the
+// human-readable text is fetched from the active locale via `i18nKey`.
 const services = [
-  {
-    icon: Brain,
-    title: "AI Readiness Assessment",
-    description:
-      "Evaluate your organization's maturity, infrastructure, talent, and governance readiness to adopt AI at scale.",
-  },
-  {
-    icon: Route,
-    title: "AI Strategies",
-    description:
-      "Define a tailored AI roadmap aligned with your national and organizational objectives, from vision to execution.",
-  },
-  {
-    icon: Server,
-    title: "AI Platforms",
-    description:
-      "Design and implement enterprise-grade AI platforms that enable scalable model development, deployment, and monitoring.",
-  },
-  {
-    icon: Factory,
-    title: "AI Factories",
-    description:
-      "Operationalize AI delivery through industrialized, repeatable frameworks — from data pipelines to model lifecycle management.",
-  },
-  {
-    icon: Lightbulb,
-    title: "AI Solutions",
-    description:
-      "Deliver purpose-built AI applications that solve real business problems — from intelligent automation to predictive analytics.",
-  },
-  {
-    icon: Cloud,
-    title: "Cloud",
-    description:
-      "Architect and manage secure, scalable cloud infrastructure — from migration strategy to multi-cloud governance and cost optimization.",
-  },
+  { icon: Brain, i18nKey: "readiness" },
+  { icon: Route, i18nKey: "strategies" },
+  { icon: Server, i18nKey: "platforms" },
+  { icon: Factory, i18nKey: "factories" },
+  { icon: Lightbulb, i18nKey: "solutions" },
+  { icon: Cloud, i18nKey: "cloud" },
 ];
 
+// Product catalogue. URL stays hard-coded since it is not user-facing copy;
+// title and description are looked up by `i18nKey`.
 const products = [
   {
     icon: Presentation,
-    title: "Creative Content Agent",
-    description:
-      "AI-powered presentation builder that transforms briefs into polished, brand-compliant KPMG slide decks in seconds.",
+    i18nKey: "creativeContent",
     url: "https://digital-foundation.uksouth.cloudapp.azure.com/slide-generator/login",
-    status: "Live",
   },
   {
     icon: Warehouse,
-    title: "Sahab Data Platform",
-    description:
-      "A centralized, governed data platform for ingestion, transformation, cataloging, and serving — built for Middle East enterprise scale.",
+    i18nKey: "sahab",
     url: "https://digital-foundation.uksouth.cloudapp.azure.com/cloudsahab/",
-    status: "Live",
   },
   {
     icon: DatabaseZap,
-    title: "Data Owner Agent",
-    description:
-      "An intelligent assistant that helps data owners manage classification, business definitions, quality rules, and PII detection across their data assets.",
+    i18nKey: "dataOwner",
     url: "https://digital-foundation.uksouth.cloudapp.azure.com/dataowner/",
-    status: "Live",
   },
   {
     icon: ShieldCheck,
-    title: "Compliance Platform",
-    description:
-      "Automated regulatory compliance checker against regional frameworks (NDMO, PDPL, SAMA, DGA, SDAIA).",
+    i18nKey: "compliance",
     url: "https://digital-foundation.uksouth.cloudapp.azure.com/AICompAgent/login",
-    status: "Live",
   },
 ];
 
+// Marketing stats. Numeric `value` and `suffix` stay neutral; the label
+// comes from the locale bundle.
 const stats = [
-  { value: 50, suffix: "+", label: "AI Solutions Delivered" },
-  { value: 200, suffix: "+", label: "Enterprise Models" },
-  { value: 15, suffix: "+", label: "Organizations Served" },
-  { value: 6, suffix: "", label: "Service Pillars" },
+  { value: 50, suffix: "+", labelKey: "stats.aiSolutions" },
+  { value: 200, suffix: "+", labelKey: "stats.enterpriseModels" },
+  { value: 15, suffix: "+", labelKey: "stats.organizations" },
+  { value: 6, suffix: "", labelKey: "stats.servicePillars" },
 ];
 
 /* ═══════════════════════════════════════════
    HOOKS
    ═══════════════════════════════════════════ */
 
+/**
+ * Returns a ref + boolean that flips to true the first time the element
+ * intersects the viewport. Used to gate scroll-driven entrance animations.
+ */
 function useInView(threshold = 0.15) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
@@ -135,6 +104,10 @@ function useInView(threshold = 0.15) {
    SHARED COMPONENTS
    ═══════════════════════════════════════════ */
 
+/**
+ * Wraps children in an opacity/translate transition that runs once the
+ * element scrolls into view. `delay` staggers a row of siblings.
+ */
 function Reveal({ children, delay = 0, className = "" }) {
   const [ref, inView] = useInView();
   return (
@@ -150,6 +123,11 @@ function Reveal({ children, delay = 0, className = "" }) {
   );
 }
 
+/**
+ * Counts up to `end` using a quartic ease-out the first time the component
+ * enters the viewport. Numbers render with `tabular-nums` so the layout
+ * doesn't jitter as digits change.
+ */
 function AnimatedCounter({ end, suffix = "", label }) {
   const ref = useRef(null);
   const [count, setCount] = useState(0);
@@ -193,98 +171,31 @@ function AnimatedCounter({ end, suffix = "", label }) {
   );
 }
 
-/* Network constellation SVG — BCG X-style data visualization */
-function NetworkGraphic({ icon: Icon }) {
-  const nodes = [
-    { x: 50, y: 50, r: 7, accent: true },
-    { x: 20, y: 28, r: 3 },
-    { x: 78, y: 22, r: 4 },
-    { x: 14, y: 62, r: 2.5 },
-    { x: 84, y: 58, r: 3.5 },
-    { x: 38, y: 14, r: 2 },
-    { x: 65, y: 82, r: 3 },
-    { x: 24, y: 80, r: 2 },
-    { x: 72, y: 38, r: 2.5 },
-    { x: 42, y: 72, r: 2 },
-    { x: 60, y: 18, r: 1.5 },
-  ];
+/* ═══════════════════════════════════════════
+   LANGUAGE SWITCHER
+   ═══════════════════════════════════════════ */
 
-  const connections = [
-    [0, 1], [0, 2], [0, 3], [0, 4], [0, 8], [0, 9],
-    [1, 5], [2, 10], [3, 7], [4, 8], [6, 9], [6, 4],
-    [1, 3], [2, 4], [7, 9],
-  ];
+/**
+ * Toggle between English and Arabic. The provider handles RTL/LTR direction
+ * and persistence; this button only flips the active locale.
+ */
+function LanguageToggle({ dark = true }) {
+  const { lang, setLang, t } = useI18n();
+  const next = lang === "en" ? "ar" : "en";
 
   return (
-    <div className="relative aspect-square w-full max-w-[340px] mx-auto">
-      <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
-        {/* Orbit rings */}
-        <circle cx="50" cy="50" r="38" stroke="rgba(0, 229, 160, 0.04)" strokeWidth="0.3" />
-        <circle cx="50" cy="50" r="25" stroke="rgba(0, 229, 160, 0.07)" strokeWidth="0.3" />
-        <circle cx="50" cy="50" r="14" stroke="rgba(0, 229, 160, 0.1)" strokeWidth="0.3" />
-
-        {/* Connection lines */}
-        {connections.map(([a, b], i) => (
-          <line
-            key={`l-${i}`}
-            x1={nodes[a].x}
-            y1={nodes[a].y}
-            x2={nodes[b].x}
-            y2={nodes[b].y}
-            stroke="rgba(0, 229, 160, 0.1)"
-            strokeWidth="0.25"
-            strokeDasharray={i % 3 === 0 ? "2 2" : "none"}
-          />
-        ))}
-
-        {/* Nodes */}
-        {nodes.map((node, i) => (
-          <g key={`n-${i}`}>
-            {node.accent && (
-              <circle
-                cx={node.x}
-                cy={node.y}
-                r={node.r + 5}
-                fill="rgba(0, 229, 160, 0.03)"
-                stroke="rgba(0, 229, 160, 0.06)"
-                strokeWidth="0.3"
-              />
-            )}
-            <circle
-              cx={node.x}
-              cy={node.y}
-              r={node.r}
-              fill={
-                node.accent
-                  ? "rgba(0, 229, 160, 0.12)"
-                  : "rgba(0, 229, 160, 0.06)"
-              }
-              stroke={
-                node.accent
-                  ? "rgba(0, 229, 160, 0.35)"
-                  : "rgba(0, 229, 160, 0.18)"
-              }
-              strokeWidth="0.4"
-            />
-            {!node.accent && i % 2 === 0 && (
-              <circle
-                cx={node.x}
-                cy={node.y}
-                r={node.r * 0.35}
-                fill="rgba(0, 229, 160, 0.5)"
-              />
-            )}
-          </g>
-        ))}
-      </svg>
-
-      {/* Center icon */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-accent/20 bg-accent/[0.08] backdrop-blur-sm">
-          <Icon size={28} className="text-accent" strokeWidth={1.5} />
-        </div>
-      </div>
-    </div>
+    <button
+      onClick={() => setLang(next)}
+      title={t("language.switchTo")}
+      className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[11px] font-bold tracking-[0.08em] uppercase transition-all duration-200 cursor-pointer ${
+        dark
+          ? "border-white/10 text-white/60 hover:border-white/25 hover:text-white"
+          : "border-warm-200 text-warm-800/70 hover:border-warm-400 hover:text-warm-900"
+      }`}
+    >
+      <Globe size={13} />
+      {t("language.switchTo")}
+    </button>
   );
 }
 
@@ -292,7 +203,12 @@ function NetworkGraphic({ icon: Icon }) {
    NAVBAR
    ═══════════════════════════════════════════ */
 
+/**
+ * Top navigation. Becomes opaque/blurred once the user scrolls past 20px and
+ * collapses to a hamburger menu below the `md` breakpoint.
+ */
 function Navbar({ user }) {
+  const t = useT();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -303,9 +219,9 @@ function Navbar({ user }) {
   }, []);
 
   const links = [
-    { label: "Services", href: "#services" },
-    { label: "Products", href: "#products" },
-    { label: "Contact", href: "#footer" },
+    { labelKey: "nav.services", href: "#services" },
+    { labelKey: "nav.products", href: "#products" },
+    { labelKey: "nav.contact", href: "#footer" },
   ];
 
   return (
@@ -322,15 +238,15 @@ function Navbar({ user }) {
           <a href="#" className="group flex items-center gap-3.5">
             <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-kpmg transition-all duration-300 group-hover:shadow-lg group-hover:shadow-kpmg/20">
               <span className="font-display text-sm font-extrabold text-white">
-                K
+                {t("brand.logoMark")}
               </span>
             </div>
             <div className="flex flex-col">
               <span className="font-display text-sm font-bold tracking-[0.08em] text-white uppercase">
-                KPMG
+                {t("brand.name")}
               </span>
               <span className="text-[9px] font-medium tracking-[0.25em] text-accent/70 uppercase">
-                Digital Foundation
+                {t("brand.tagline")}
               </span>
             </div>
           </a>
@@ -343,14 +259,15 @@ function Navbar({ user }) {
                 href={link.href}
                 className="relative text-[13px] font-medium text-white/35 transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-accent after:transition-all after:duration-300 hover:text-white hover:after:w-full"
               >
-                {link.label}
+                {t(link.labelKey)}
               </a>
             ))}
+            <LanguageToggle />
             <a
               href="#products"
               className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-6 py-2.5 text-[12px] font-bold tracking-[0.05em] text-white uppercase transition-all duration-300 hover:bg-medium-blue hover:shadow-lg hover:shadow-accent/20"
             >
-              Explore Products
+              {t("nav.exploreProducts")}
               <ArrowRight
                 size={13}
                 className="transition-transform duration-300 group-hover:translate-x-0.5"
@@ -378,15 +295,18 @@ function Navbar({ user }) {
                 onClick={() => setMobileOpen(false)}
                 className="block py-3.5 text-sm font-medium text-white/40 hover:text-white"
               >
-                {link.label}
+                {t(link.labelKey)}
               </a>
             ))}
+            <div className="mt-4">
+              <LanguageToggle />
+            </div>
             <a
               href="#products"
               onClick={() => setMobileOpen(false)}
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 text-[12px] font-bold tracking-[0.05em] text-white uppercase"
             >
-              Explore Products
+              {t("nav.exploreProducts")}
               <ArrowRight size={13} />
             </a>
           </div>
@@ -400,7 +320,12 @@ function Navbar({ user }) {
    HERO
    ═══════════════════════════════════════════ */
 
+/**
+ * Landing hero. Tracks the cursor to drive a soft spotlight and runs a
+ * staggered entrance for badge / headline / description / CTAs on first paint.
+ */
 function Hero() {
+  const t = useT();
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
   const [loaded, setLoaded] = useState(false);
 
@@ -416,6 +341,15 @@ function Hero() {
       y: ((e.clientY - rect.top) / rect.height) * 100,
     });
   };
+
+  // The third line gets the gradient treatment; build the array from i18n keys
+  // so the same visual emphasis lands on the equivalent phrase in any locale.
+  const headlineLines = [
+    { key: "hero.headline.line1", accent: false },
+    { key: "hero.headline.line2", accent: false },
+    { key: "hero.headline.line3", accent: true },
+    { key: "hero.headline.line4", accent: false },
+  ];
 
   return (
     <section
@@ -531,27 +465,22 @@ function Hero() {
             <div className="inline-flex items-center gap-3 rounded-full border border-accent/15 bg-accent/[0.04] px-5 py-2.5 backdrop-blur-sm">
               <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
               <span className="font-display text-[10px] font-semibold tracking-[0.3em] text-accent/80 uppercase">
-                Digital Foundation
+                {t("hero.badge")}
               </span>
             </div>
           </div>
 
           {/* Headline — staggered reveal */}
           <h1 className="max-w-3xl font-display font-extrabold uppercase leading-[0.92] tracking-[-0.03em]">
-            {[
-              "Transforming",
-              "the Middle East's",
-              "Digital Future",
-              "with AI",
-            ].map((line, i) => (
+            {headlineLines.map((line, i) => (
               <span
-                key={line}
+                key={line.key}
                 className={`block transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
                   loaded
                     ? "translate-y-0 opacity-100"
                     : "translate-y-12 opacity-0"
                 } ${
-                  line === "Digital Future"
+                  line.accent
                     ? "bg-gradient-to-r from-light-blue via-medium-blue to-kpmg-glow bg-clip-text text-transparent"
                     : "text-white"
                 }`}
@@ -560,7 +489,7 @@ function Hero() {
                   fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)",
                 }}
               >
-                {line}
+                {t(line.key)}
               </span>
             ))}
           </h1>
@@ -572,9 +501,7 @@ function Hero() {
             }`}
             style={{ transitionDelay: "800ms" }}
           >
-            KPMG's Digital Foundation practice delivers enterprise-grade artificial
-            intelligence — from strategy through implementation — to
-            organizations shaping the Middle East's transformation.
+            {t("hero.description")}
           </p>
 
           {/* CTAs */}
@@ -588,7 +515,7 @@ function Hero() {
               href="#services"
               className="group inline-flex items-center gap-3 rounded-full bg-accent px-8 py-4 font-display text-[12px] font-bold tracking-[0.08em] text-white uppercase transition-all duration-300 hover:bg-medium-blue hover:shadow-xl hover:shadow-accent/15"
             >
-              Our Services
+              {t("hero.ctaPrimary")}
               <ChevronDown
                 size={14}
                 className="transition-transform duration-300 group-hover:translate-y-0.5"
@@ -598,7 +525,7 @@ function Hero() {
               href="#products"
               className="inline-flex items-center gap-3 rounded-full border border-white/10 px-8 py-4 font-display text-[12px] font-bold tracking-[0.08em] text-white uppercase transition-all duration-300 hover:border-white/25 hover:bg-white/[0.03]"
             >
-              View Products
+              {t("hero.ctaSecondary")}
             </a>
           </div>
         </div>
@@ -607,7 +534,7 @@ function Hero() {
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
         <span className="text-[9px] font-semibold tracking-[0.3em] text-white/15 uppercase">
-          Scroll
+          {t("hero.scroll")}
         </span>
         <div className="h-8 w-px animate-pulse bg-gradient-to-b from-white/20 to-transparent" />
       </div>
@@ -622,7 +549,12 @@ function Hero() {
    STATS
    ═══════════════════════════════════════════ */
 
+/**
+ * Strip of animated counters. Counters start their count-up the first time
+ * the strip enters view and stay on the final value afterward.
+ */
 function Stats() {
+  const t = useT();
   const [ref, inView] = useInView(0.3);
 
   return (
@@ -634,7 +566,7 @@ function Stats() {
         <div className="grid grid-cols-2 gap-12 lg:grid-cols-4 lg:gap-0">
           {stats.map((stat, i) => (
             <div
-              key={stat.label}
+              key={stat.labelKey}
               className={`relative transition-all duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
                 inView
                   ? "translate-y-0 opacity-100"
@@ -642,7 +574,11 @@ function Stats() {
               } ${i > 0 ? "lg:border-l lg:border-white/[0.05]" : ""}`}
               style={{ transitionDelay: inView ? `${i * 150}ms` : "0ms" }}
             >
-              <AnimatedCounter {...stat} />
+              <AnimatedCounter
+                end={stat.value}
+                suffix={stat.suffix}
+                label={t(stat.labelKey)}
+              />
             </div>
           ))}
         </div>
@@ -655,6 +591,10 @@ function Stats() {
    SERVICES — BCG X-STYLE TABBED
    ═══════════════════════════════════════════ */
 
+/**
+ * Single service tile. Pure presentational — copy is supplied by the parent
+ * after locale lookup so this stays locale-agnostic.
+ */
 function ServiceCard({ icon: Icon, title, description }) {
   return (
     <div className="group rounded-2xl border border-white/[0.06] bg-[#111111] p-7 transition-all duration-500 hover:-translate-y-1 hover:border-kpmg-glow/20 hover:shadow-xl hover:shadow-kpmg/[0.06]">
@@ -671,7 +611,12 @@ function ServiceCard({ icon: Icon, title, description }) {
   );
 }
 
+/**
+ * Services section. Reads the service catalogue and resolves
+ * each item's title/description against the active locale.
+ */
 function Services() {
+  const t = useT();
   const [ref, inView] = useInView();
 
   return (
@@ -679,18 +624,17 @@ function Services() {
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <Reveal>
           <span className="font-display text-[10px] font-semibold tracking-[0.35em] text-accent/60 uppercase">
-            What We Do
+            {t("services.eyebrow")}
           </span>
         </Reveal>
         <Reveal delay={100}>
           <h2 className="mt-4 font-display text-3xl font-extrabold tracking-[-0.02em] text-white uppercase sm:text-4xl lg:text-5xl">
-            Our Services
+            {t("services.title")}
           </h2>
         </Reveal>
         <Reveal delay={200}>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-white/35 lg:text-lg">
-            Six integrated service pillars that take organizations from AI
-            ambition to enterprise-scale impact.
+            {t("services.intro")}
           </p>
         </Reveal>
 
@@ -700,7 +644,7 @@ function Services() {
         >
           {services.map((service, i) => (
             <div
-              key={service.title}
+              key={service.i18nKey}
               className={`transition-all duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
                 inView
                   ? "translate-y-0 opacity-100"
@@ -708,7 +652,11 @@ function Services() {
               }`}
               style={{ transitionDelay: inView ? `${i * 80}ms` : "0ms" }}
             >
-              <ServiceCard {...service} />
+              <ServiceCard
+                icon={service.icon}
+                title={t(`services.items.${service.i18nKey}.title`)}
+                description={t(`services.items.${service.i18nKey}.description`)}
+              />
             </div>
           ))}
         </div>
@@ -721,9 +669,11 @@ function Services() {
    PRODUCTS
    ═══════════════════════════════════════════ */
 
-function ProductCard({ icon: Icon, title, description, url, status }) {
-  const isLive = status === "Live";
-
+/**
+ * Single product tile. Renders as a clickable link when live, otherwise as a
+ * dimmed static card. The "Launch Application" CTA only appears for live items.
+ */
+function ProductCard({ icon: Icon, title, description, url, status, launchLabel, isLive }) {
   const inner = (
     <div
       className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border p-7 transition-all duration-500 lg:p-8 ${
@@ -775,7 +725,7 @@ function ProductCard({ icon: Icon, title, description, url, status }) {
       {/* Launch link */}
       {isLive && (
         <div className="mt-6 flex items-center gap-2 text-[11px] font-bold tracking-[0.12em] text-accent/60 uppercase transition-colors duration-300 group-hover:text-accent">
-          Launch Application
+          {launchLabel}
           <ArrowUpRight
             size={13}
             className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
@@ -800,7 +750,12 @@ function ProductCard({ icon: Icon, title, description, url, status }) {
   return inner;
 }
 
+/**
+ * Products section. All items currently ship as "Live"; the card component
+ * still supports a non-live state for future entries.
+ */
 function Products() {
+  const t = useT();
   const [ref, inView] = useInView();
 
   return (
@@ -811,18 +766,17 @@ function Products() {
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <Reveal>
           <span className="font-display text-[10px] font-semibold tracking-[0.35em] text-accent/60 uppercase">
-            What We Build
+            {t("products.eyebrow")}
           </span>
         </Reveal>
         <Reveal delay={100}>
           <h2 className="mt-4 font-display text-3xl font-extrabold tracking-[-0.02em] text-white uppercase sm:text-4xl lg:text-5xl">
-            Our Products
+            {t("products.title")}
           </h2>
         </Reveal>
         <Reveal delay={200}>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-white/35 lg:text-lg">
-            Purpose-built applications and platforms designed to accelerate AI
-            adoption across the Middle East.
+            {t("products.intro")}
           </p>
         </Reveal>
 
@@ -832,7 +786,7 @@ function Products() {
         >
           {products.map((product, i) => (
             <div
-              key={product.title}
+              key={product.i18nKey}
               className={`transition-all duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
                 inView
                   ? "translate-y-0 opacity-100"
@@ -840,7 +794,15 @@ function Products() {
               }`}
               style={{ transitionDelay: inView ? `${i * 100}ms` : "0ms" }}
             >
-              <ProductCard {...product} />
+              <ProductCard
+                icon={product.icon}
+                url={product.url}
+                isLive={true}
+                title={t(`products.items.${product.i18nKey}.title`)}
+                description={t(`products.items.${product.i18nKey}.description`)}
+                status={t("products.statusLive")}
+                launchLabel={t("products.launch")}
+              />
             </div>
           ))}
         </div>
@@ -853,7 +815,11 @@ function Products() {
    CALL TO ACTION
    ═══════════════════════════════════════════ */
 
+/**
+ * Full-bleed CTA panel that appears below the products section.
+ */
 function CallToAction() {
+  const t = useT();
   const [ref, inView] = useInView();
 
   return (
@@ -879,20 +845,19 @@ function CallToAction() {
           }`}
         >
           <h2 className="font-display text-3xl font-extrabold tracking-[-0.02em] text-white uppercase sm:text-4xl lg:text-5xl">
-            Ready to transform
+            {t("cta.headlineLine1")}
             <br />
-            <span className="text-accent">your organization?</span>
+            <span className="text-accent">{t("cta.headlineLine2")}</span>
           </h2>
           <p className="mx-auto mt-8 max-w-lg text-base leading-relaxed text-white/45 lg:text-lg">
-            Partner with KPMG's Digital Foundation team to unlock the full
-            potential of Digital Foundation for your enterprise.
+            {t("cta.description")}
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
             <a
               href="#products"
               className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-9 py-4 text-[12px] font-bold tracking-[0.08em] text-white uppercase transition-all duration-300 hover:bg-medium-blue hover:shadow-xl hover:shadow-accent/15"
             >
-              Explore Products
+              {t("cta.primary")}
               <ArrowRight
                 size={14}
                 className="transition-transform duration-300 group-hover:translate-x-0.5"
@@ -902,7 +867,7 @@ function CallToAction() {
               href="#footer"
               className="inline-flex items-center gap-2 rounded-full border border-white/15 px-9 py-4 text-[12px] font-bold tracking-[0.08em] text-white uppercase transition-all duration-300 hover:border-white/30 hover:bg-white/[0.04]"
             >
-              Contact Us
+              {t("cta.secondary")}
             </a>
           </div>
         </div>
@@ -915,7 +880,19 @@ function CallToAction() {
    FOOTER
    ═══════════════════════════════════════════ */
 
+/**
+ * Footer with brand, navigation links, and a live-rebuild list of services.
+ */
 function Footer() {
+  const t = useT();
+
+  // Footer nav uses the same anchors as the main navbar.
+  const navItems = [
+    { labelKey: "nav.services", href: "#services" },
+    { labelKey: "nav.products", href: "#products" },
+    { labelKey: "nav.contact", href: "#footer" },
+  ];
+
   return (
     <footer id="footer" className="border-t border-white/[0.04] bg-[#080808]">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
@@ -925,38 +902,36 @@ function Footer() {
             <div className="flex items-center gap-3.5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-kpmg">
                 <span className="font-display text-sm font-extrabold text-white">
-                  K
+                  {t("brand.logoMark")}
                 </span>
               </div>
               <div>
                 <div className="font-display text-sm font-bold tracking-[0.05em] text-white uppercase">
-                  KPMG
+                  {t("brand.name")}
                 </div>
                 <div className="text-[9px] font-medium tracking-[0.2em] text-accent/50 uppercase">
-                  Digital Foundation
+                  {t("brand.tagline")}
                 </div>
               </div>
             </div>
             <p className="mt-8 max-w-sm text-sm leading-relaxed text-white/25">
-              Enterprise-grade artificial intelligence — from strategy through
-              implementation — for organizations shaping the Middle East's digital
-              transformation.
+              {t("footer.description")}
             </p>
           </div>
 
           {/* Navigation */}
           <div>
             <h4 className="text-[10px] font-bold tracking-[0.3em] text-white/15 uppercase">
-              Navigation
+              {t("footer.navigation")}
             </h4>
             <div className="mt-6 space-y-4">
-              {["Services", "Products", "Contact"].map((item) => (
+              {navItems.map((item) => (
                 <a
-                  key={item}
-                  href={`#${item === "Contact" ? "footer" : item.toLowerCase()}`}
+                  key={item.href}
+                  href={item.href}
                   className="block text-[13px] text-white/30 transition-colors duration-300 hover:text-accent"
                 >
-                  {item}
+                  {t(item.labelKey)}
                 </a>
               ))}
             </div>
@@ -965,15 +940,15 @@ function Footer() {
           {/* Capabilities */}
           <div>
             <h4 className="text-[10px] font-bold tracking-[0.3em] text-white/15 uppercase">
-              Capabilities
+              {t("footer.capabilities")}
             </h4>
             <div className="mt-6 space-y-4">
               {services.map((s) => (
                 <span
-                  key={s.title}
+                  key={s.i18nKey}
                   className="block text-[13px] text-white/20"
                 >
-                  {s.title}
+                  {t(`services.items.${s.i18nKey}.title`)}
                 </span>
               ))}
             </div>
@@ -982,9 +957,7 @@ function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-white/[0.05] py-8">
-          <p className="text-[11px] text-white/15">
-            &copy; 2026 KPMG Middle East &mdash; Digital Foundation
-          </p>
+          <p className="text-[11px] text-white/15">{t("footer.copyright")}</p>
         </div>
       </div>
     </footer>
@@ -995,6 +968,10 @@ function Footer() {
    APP
    ═══════════════════════════════════════════ */
 
+/**
+ * Bold-theme landing page. Composes the full single-page layout: navbar,
+ * hero, services, products, CTA, footer.
+ */
 export default function BoldApp({ user }) {
   return (
     <div className="min-h-screen bg-[#0a0a0a] font-body antialiased">

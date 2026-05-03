@@ -8,15 +8,24 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
+    """SQLAlchemy declarative base shared by every ORM model in this service."""
     pass
 
 
 class UserRole(str, enum.Enum):
+    """Account roles. Stored as the lowercase enum value in the DB."""
     admin = "admin"
     user = "user"
 
 
 class User(Base):
+    """An account in the SSO directory.
+
+    ``email`` is the login identifier (unique-indexed). ``password_hash`` is
+    a bcrypt hash. ``is_active`` is the soft-delete flag — deactivated users
+    can no longer authenticate but rows are preserved for audit.
+    """
+
     __tablename__ = "users"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -40,6 +49,13 @@ class User(Base):
 
 
 class AppAccess(Base):
+    """Per-user, per-app authorization grant.
+
+    Each row is a unique ``(user_id, app_slug)`` pair. ``has_access`` lets
+    admins disable access without losing the audit trail of who granted it
+    via ``granted_by`` / ``granted_at``.
+    """
+
     __tablename__ = "app_access"
     __table_args__ = (UniqueConstraint("user_id", "app_slug", name="uq_user_app"),)
 
@@ -60,6 +76,13 @@ class AppAccess(Base):
 
 
 class Setting(Base):
+    """Global runtime configuration stored as ``key→value`` strings.
+
+    Used for toggles like ``signup_enabled`` that admins should be able to
+    flip without redeploying. ``updated_by`` records the admin that made
+    the most recent change.
+    """
+
     __tablename__ = "settings"
 
     key: Mapped[str] = mapped_column(String(100), primary_key=True)

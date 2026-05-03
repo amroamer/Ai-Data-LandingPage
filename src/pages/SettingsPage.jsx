@@ -7,7 +7,6 @@ import {
   Trash2,
   KeyRound,
   X,
-  Check,
   Shield,
   User as UserIcon,
   ChevronDown,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import UserMenu from "../components/UserMenu";
+import { useT } from "../i18n/i18n";
 import {
   apiGetUsers,
   apiCreateUser,
@@ -26,16 +26,21 @@ import {
   apiUpdateSettings,
 } from "../api/auth";
 
+// Apps the auth-service knows about. Slug must match the backend's
+// VALID_APP_SLUGS; the label is resolved per-locale at render time.
 const APP_SLUGS = [
-  { slug: "slides-generator", label: "Slides Generator" },
-  { slug: "ai-badges", label: "AI Badges" },
-  { slug: "cloud-sahab", label: "Cloud Sahab" },
-  { slug: "data-owner", label: "Data Owner Agent" },
-  { slug: "ai-data-landing", label: "AI Data Landing" },
-  { slug: "ragflow", label: "RAGFlow" },
+  "slides-generator",
+  "ai-badges",
+  "cloud-sahab",
+  "data-owner",
+  "ai-data-landing",
+  "ragflow",
 ];
 
-/* ── Modal shell ── */
+/**
+ * Modal shell with a translucent backdrop. Clicking the backdrop closes the
+ * modal; the inner card has its own close button in the header.
+ */
 function Modal({ title, onClose, children }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -53,7 +58,10 @@ function Modal({ title, onClose, children }) {
   );
 }
 
-/* ── Input component ── */
+/**
+ * Labeled form field wrapper. The label sits above the children and inherits
+ * the consistent uppercase tracking used across the settings UI.
+ */
 function Field({ label, children }) {
   return (
     <div>
@@ -68,8 +76,12 @@ function Field({ label, children }) {
 const INPUT =
   "w-full rounded-xl border border-white/[0.08] bg-[#0a0a0a] px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-accent/40 focus:outline-none focus:ring-1 focus:ring-accent/20";
 
-/* ── Create/Edit user modal ── */
+/**
+ * Create-or-edit user modal. The presence of `user` flips the form into
+ * edit mode (which hides email/password — those can't be changed here).
+ */
 function UserFormModal({ user: editUser, onClose, onSaved }) {
+  const t = useT();
   const isEdit = !!editUser;
   const [form, setForm] = useState({
     email: editUser?.email || "",
@@ -81,10 +93,15 @@ function UserFormModal({ user: editUser, onClose, onSaved }) {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
+  /** Shallow form-field setter — keeps the rest of the form intact. */
   function set(k, v) {
     setForm((f) => ({ ...f, [k]: v }));
   }
 
+  /**
+   * Submit the form. Calls update for edits or create for new users, then
+   * notifies the parent so it can close the modal and refresh the list.
+   */
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -113,36 +130,36 @@ function UserFormModal({ user: editUser, onClose, onSaved }) {
   }
 
   return (
-    <Modal title={isEdit ? "Edit user" : "Create user"} onClose={onClose}>
+    <Modal title={isEdit ? t("settings.modals.editUser") : t("settings.modals.createUser")} onClose={onClose}>
       {error && (
         <div className="mb-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-[13px] text-red-400">
           {error}
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Field label="Full name">
+        <Field label={t("settings.modals.fullNameLabel")}>
           <input
             className={INPUT}
             required
             value={form.full_name}
             onChange={(e) => set("full_name", e.target.value)}
-            placeholder="Full name"
+            placeholder={t("settings.modals.fullNamePlaceholder")}
           />
         </Field>
 
         {!isEdit && (
           <>
-            <Field label="Email">
+            <Field label={t("settings.modals.emailLabel")}>
               <input
                 className={INPUT}
                 type="email"
                 required
                 value={form.email}
                 onChange={(e) => set("email", e.target.value)}
-                placeholder="name@kpmg.com"
+                placeholder={t("settings.modals.emailPlaceholder")}
               />
             </Field>
-            <Field label="Password">
+            <Field label={t("settings.modals.passwordLabel")}>
               <input
                 className={INPUT}
                 type="password"
@@ -150,20 +167,20 @@ function UserFormModal({ user: editUser, onClose, onSaved }) {
                 minLength={8}
                 value={form.password}
                 onChange={(e) => set("password", e.target.value)}
-                placeholder="Min 8 chars, letter + number"
+                placeholder={t("settings.modals.passwordPlaceholder")}
               />
             </Field>
           </>
         )}
 
-        <Field label="Role">
+        <Field label={t("settings.modals.roleLabel")}>
           <select
             className={INPUT + " cursor-pointer"}
             value={form.role}
             onChange={(e) => set("role", e.target.value)}
           >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
+            <option value="user">{t("settings.roles.user")}</option>
+            <option value="admin">{t("settings.roles.admin")}</option>
           </select>
         </Field>
 
@@ -175,7 +192,7 @@ function UserFormModal({ user: editUser, onClose, onSaved }) {
               onChange={(e) => set("is_active", e.target.checked)}
               className="h-4 w-4 rounded border-white/20 bg-[#0a0a0a] accent-accent"
             />
-            Account active
+            {t("settings.modals.accountActive")}
           </label>
         )}
 
@@ -185,14 +202,14 @@ function UserFormModal({ user: editUser, onClose, onSaved }) {
             onClick={onClose}
             className="rounded-lg border border-white/[0.08] px-4 py-2 text-[12px] font-semibold text-white/40 hover:text-white cursor-pointer"
           >
-            Cancel
+            {t("settings.modals.cancel")}
           </button>
           <button
             type="submit"
             disabled={saving}
             className="rounded-lg bg-accent px-5 py-2 text-[12px] font-bold text-white hover:bg-medium-blue disabled:opacity-50 cursor-pointer"
           >
-            {saving ? "Saving..." : isEdit ? "Update" : "Create"}
+            {saving ? t("settings.modals.saving") : isEdit ? t("settings.modals.update") : t("settings.modals.create")}
           </button>
         </div>
       </form>
@@ -200,12 +217,17 @@ function UserFormModal({ user: editUser, onClose, onSaved }) {
   );
 }
 
-/* ── Reset password modal ── */
+/**
+ * Admin password reset modal. Sends a brand-new password without requiring
+ * the user's old one (admin override path).
+ */
 function ResetPwModal({ user: target, onClose, onSaved }) {
+  const t = useT();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
+  /** Submit the new password to the admin reset endpoint. */
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -221,14 +243,14 @@ function ResetPwModal({ user: target, onClose, onSaved }) {
   }
 
   return (
-    <Modal title={`Reset password — ${target.full_name}`} onClose={onClose}>
+    <Modal title={t("settings.modals.resetPasswordTitle", { name: target.full_name })} onClose={onClose}>
       {error && (
         <div className="mb-4 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-[13px] text-red-400">
           {error}
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Field label="New password">
+        <Field label={t("settings.modals.newPasswordLabel")}>
           <input
             className={INPUT}
             type="password"
@@ -236,7 +258,7 @@ function ResetPwModal({ user: target, onClose, onSaved }) {
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Min 8 chars, letter + number"
+            placeholder={t("settings.modals.passwordPlaceholder")}
           />
         </Field>
         <div className="flex justify-end gap-3 pt-2">
@@ -245,14 +267,14 @@ function ResetPwModal({ user: target, onClose, onSaved }) {
             onClick={onClose}
             className="rounded-lg border border-white/[0.08] px-4 py-2 text-[12px] font-semibold text-white/40 hover:text-white cursor-pointer"
           >
-            Cancel
+            {t("settings.modals.cancel")}
           </button>
           <button
             type="submit"
             disabled={saving}
             className="rounded-lg bg-accent px-5 py-2 text-[12px] font-bold text-white hover:bg-medium-blue disabled:opacity-50 cursor-pointer"
           >
-            {saving ? "Saving..." : "Reset password"}
+            {saving ? t("settings.modals.saving") : t("settings.modals.resetPasswordSubmit")}
           </button>
         </div>
       </form>
@@ -260,10 +282,16 @@ function ResetPwModal({ user: target, onClose, onSaved }) {
   );
 }
 
-/* ── App access row ── */
+/**
+ * Per-user grid of app-access toggles. Each click flips the slug's
+ * `has_access` flag; the parent's `onUpdated` re-fetches so disabled state
+ * stays consistent with the server.
+ */
 function AccessRow({ userId, currentAccess, onUpdated }) {
+  const t = useT();
   const [saving, setSaving] = useState(false);
 
+  /** Flip access for one slug, then ask the parent to refetch. */
   async function toggle(slug, currentValue) {
     setSaving(true);
     try {
@@ -276,7 +304,7 @@ function AccessRow({ userId, currentAccess, onUpdated }) {
 
   return (
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-      {APP_SLUGS.map(({ slug, label }) => {
+      {APP_SLUGS.map((slug) => {
         const entry = currentAccess.find((a) => a.app_slug === slug);
         const hasAccess = entry?.has_access ?? false;
         return (
@@ -291,7 +319,7 @@ function AccessRow({ userId, currentAccess, onUpdated }) {
             }`}
           >
             <div className={`h-2 w-2 rounded-full ${hasAccess ? "bg-accent" : "bg-white/15"}`} />
-            {label}
+            {t(`settings.appSlugs.${slug}`)}
           </button>
         );
       })}
@@ -299,8 +327,13 @@ function AccessRow({ userId, currentAccess, onUpdated }) {
   );
 }
 
-/* ── Main settings page ── */
+/**
+ * Admin settings page. Lets admins toggle public signup, manage user
+ * accounts (create/edit/deactivate/reset), and grant per-app access.
+ * Loads users and settings together on mount and after every mutation.
+ */
 export default function SettingsPage() {
+  const t = useT();
   const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [settings, setSettings] = useState({});
@@ -309,6 +342,10 @@ export default function SettingsPage() {
   const [expandedUser, setExpandedUser] = useState(null);
   const [deleting, setDeleting] = useState(null);
 
+  /**
+   * Re-fetch both users and settings in parallel and reshape settings into
+   * a flat key→value map for easier toggle/inspect access.
+   */
   const loadData = useCallback(async () => {
     const [u, s] = await Promise.all([apiGetUsers(), apiGetSettings()]);
     setUsers(u);
@@ -322,12 +359,14 @@ export default function SettingsPage() {
     loadData();
   }, [loadData]);
 
+  /** Flip the global signup_enabled flag and update local state optimistically. */
   async function toggleSignup() {
     const current = settings.signup_enabled === "true";
     await apiUpdateSettings({ signup_enabled: current ? "false" : "true" });
     setSettings((s) => ({ ...s, signup_enabled: current ? "false" : "true" }));
   }
 
+  /** Soft-delete (deactivate) a user, then refresh. */
   async function handleDelete(u) {
     setDeleting(u.id);
     try {
@@ -338,6 +377,7 @@ export default function SettingsPage() {
     }
   }
 
+  /** Modal-saved callback — close the modal and re-fetch the list. */
   function handleSaved() {
     setModal(null);
     loadData();
@@ -362,11 +402,11 @@ export default function SettingsPage() {
               className="flex items-center gap-2 text-[13px] font-medium text-white/35 transition-colors hover:text-white"
             >
               <ArrowLeft size={14} />
-              Home
+              {t("settings.home")}
             </Link>
             <div className="h-5 w-px bg-white/[0.08]" />
             <span className="font-display text-sm font-bold tracking-[0.05em] text-white uppercase">
-              Settings
+              {t("settings.title")}
             </span>
           </div>
           <UserMenu variant="bold" />
@@ -377,14 +417,14 @@ export default function SettingsPage() {
         {/* ── Global Settings ── */}
         <section className="mb-12">
           <h2 className="font-display text-xs font-semibold tracking-[0.3em] text-accent/60 uppercase">
-            Global Settings
+            {t("settings.globalSettings")}
           </h2>
           <div className="mt-4 rounded-2xl border border-white/[0.06] bg-[#111111] p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm font-semibold text-white">Public signup</div>
+                <div className="text-sm font-semibold text-white">{t("settings.publicSignup")}</div>
                 <div className="mt-0.5 text-[12px] text-white/30">
-                  Allow new users to create accounts
+                  {t("settings.publicSignupDescription")}
                 </div>
               </div>
               <button
@@ -407,23 +447,23 @@ export default function SettingsPage() {
         <section>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-display text-xs font-semibold tracking-[0.3em] text-accent/60 uppercase">
-              Users ({users.length})
+              {t("settings.users")} ({users.length})
             </h2>
             <button
               onClick={() => setModal({ type: "create" })}
               className="flex items-center gap-2 rounded-lg bg-accent/[0.08] border border-accent/15 px-4 py-2 text-[11px] font-bold tracking-[0.08em] text-accent uppercase transition-all hover:bg-accent/15 cursor-pointer"
             >
               <Plus size={14} />
-              Create user
+              {t("settings.createUser")}
             </button>
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-[#111111]">
             {/* Header */}
             <div className="hidden border-b border-white/[0.04] px-6 py-3 md:grid md:grid-cols-[1fr_1fr_100px_80px_140px]">
-              {["Name", "Email", "Role", "Status", "Actions"].map((h) => (
-                <div key={h} className="text-[10px] font-bold tracking-[0.15em] text-white/20 uppercase">
-                  {h}
+              {["name", "email", "role", "status", "actions"].map((col) => (
+                <div key={col} className="text-[10px] font-bold tracking-[0.15em] text-white/20 uppercase">
+                  {t(`settings.columns.${col}`)}
                 </div>
               ))}
             </div>
@@ -458,7 +498,7 @@ export default function SettingsPage() {
                       }`}
                     >
                       {u.role === "admin" ? <Shield size={10} /> : <UserIcon size={10} />}
-                      {u.role}
+                      {t(`settings.roles.${u.role}`)}
                     </span>
                   </div>
 
@@ -474,7 +514,7 @@ export default function SettingsPage() {
                           u.is_active ? "bg-emerald-400" : "bg-red-400/60"
                         }`}
                       />
-                      {u.is_active ? "Active" : "Inactive"}
+                      {u.is_active ? t("settings.statusActive") : t("settings.statusInactive")}
                     </span>
                   </div>
 
@@ -483,14 +523,14 @@ export default function SettingsPage() {
                     <button
                       onClick={() => setModal({ type: "edit", user: u })}
                       className="rounded-lg p-2 text-white/20 hover:bg-white/[0.05] hover:text-white/60 cursor-pointer"
-                      title="Edit"
+                      title={t("settings.actions.edit")}
                     >
                       <Pencil size={14} />
                     </button>
                     <button
                       onClick={() => setModal({ type: "reset", user: u })}
                       className="rounded-lg p-2 text-white/20 hover:bg-white/[0.05] hover:text-white/60 cursor-pointer"
-                      title="Reset password"
+                      title={t("settings.actions.resetPassword")}
                     >
                       <KeyRound size={14} />
                     </button>
@@ -498,14 +538,14 @@ export default function SettingsPage() {
                       onClick={() => handleDelete(u)}
                       disabled={deleting === u.id || u.email === user?.email}
                       className="rounded-lg p-2 text-white/20 hover:bg-red-500/10 hover:text-red-400 disabled:opacity-20 cursor-pointer"
-                      title="Deactivate"
+                      title={t("settings.actions.deactivate")}
                     >
                       <Trash2 size={14} />
                     </button>
                     <button
                       onClick={() => setExpandedUser(expandedUser === u.id ? null : u.id)}
                       className="rounded-lg p-2 text-white/20 hover:bg-white/[0.05] hover:text-white/60 cursor-pointer"
-                      title="App access"
+                      title={t("settings.actions.appAccessTitle")}
                     >
                       {expandedUser === u.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                     </button>
@@ -516,7 +556,7 @@ export default function SettingsPage() {
                 {expandedUser === u.id && (
                   <div className="border-t border-white/[0.04] bg-[#0d0d0d] px-6 py-4">
                     <div className="mb-3 text-[10px] font-bold tracking-[0.15em] text-white/20 uppercase">
-                      App access
+                      {t("settings.appAccess")}
                     </div>
                     <AccessRow userId={u.id} currentAccess={u.app_access || []} onUpdated={loadData} />
                   </div>

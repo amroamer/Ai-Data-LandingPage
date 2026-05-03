@@ -9,5 +9,12 @@ async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    """FastAPI dependency that yields a single async DB session per request.
+
+    The session is closed automatically when the request finishes (via the
+    async context manager), so handlers don't need to manage cleanup.
+    ``expire_on_commit=False`` keeps ORM attributes accessible after commit
+    so handlers can still read fields off returned objects.
+    """
     async with async_session() as session:
         yield session
