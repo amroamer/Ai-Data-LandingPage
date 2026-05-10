@@ -413,6 +413,24 @@ export default function SettingsPage() {
         </div>
       </nav>
 
+      {/* Settings sub-nav */}
+      <div className="border-b border-white/[0.04] bg-[#0a0a0a]">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-6 lg:px-10">
+          <Link
+            to="/settings"
+            className="border-b-2 border-accent px-3 py-3 text-[12px] font-semibold tracking-[0.1em] text-white uppercase"
+          >
+            {t("settings.tabs.users")}
+          </Link>
+          <Link
+            to="/settings/products"
+            className="border-b-2 border-transparent px-3 py-3 text-[12px] font-semibold tracking-[0.1em] text-white/40 uppercase transition-colors hover:text-white"
+          >
+            {t("settings.tabs.products")}
+          </Link>
+        </div>
+      </div>
+
       <div className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
         {/* ── Global Settings ── */}
         <section className="mb-12">

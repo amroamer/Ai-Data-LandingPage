@@ -2,8 +2,8 @@ import enum
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, String, UniqueConstraint
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -73,6 +73,47 @@ class AppAccess(Base):
     )
 
     user: Mapped["User"] = relationship(back_populates="app_access", foreign_keys=[user_id])
+
+
+class Product(Base):
+    """A product showcased on the landing page.
+
+    Holds bilingual marketing copy (English + Arabic) directly in the table
+    so admins can edit it from the UI without touching the i18n JSON files.
+    ``screenshots`` is a JSONB array of URL strings; ``is_visible`` is the
+    soft-hide toggle (false = excluded from the public listing but
+    preserved in the DB). ``sort_order`` controls display order on both
+    the landing page and the admin list.
+    """
+
+    __tablename__ = "products"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    slug: Mapped[str] = mapped_column(String(80), unique=True, nullable=False, index=True)
+    icon_name: Mapped[str] = mapped_column(String(60), nullable=False, default="Package")
+    url: Mapped[str] = mapped_column(String(500), nullable=False)
+    video_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    screenshots: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
+    is_visible: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    sort_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+    title_en: Mapped[str] = mapped_column(String(200), nullable=False)
+    title_ar: Mapped[str] = mapped_column(String(200), nullable=False)
+    description_en: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    description_ar: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    problem_en: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    problem_ar: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    solution_en: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    solution_ar: Mapped[str] = mapped_column(Text, nullable=False, default="")
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
 
 
 class Setting(Base):

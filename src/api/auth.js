@@ -72,3 +72,19 @@ export const apiUpdateAccess = (id, access) =>
 export const apiGetSettings = () => request("/auth/api/settings");
 /** Bulk-update global settings, taking a {key: value} map. */
 export const apiUpdateSettings = (settings) => put(`/auth/api/settings`, { settings });
+
+// Public — products (visible only)
+/** List visible products in display order. Used by the landing page. */
+export const apiGetProducts = () => request("/auth/api/products");
+/** Read one visible product by slug. Used by the detail page. */
+export const apiGetProduct = (slug) => request(`/auth/api/products/${slug}`);
+
+// Admin — products (full set including hidden)
+/** List every product, visible or hidden. Admin only. */
+export const apiAdminListProducts = () => request("/auth/api/admin/products");
+/** Create a new product. Admin only. */
+export const apiAdminCreateProduct = (data) => post("/auth/api/admin/products", data);
+/** Partial-update a product. Admin only. */
+export const apiAdminUpdateProduct = (id, data) => put(`/auth/api/admin/products/${id}`, data);
+/** Hard-delete a product. Admin only. Use update is_visible=false to hide instead. */
+export const apiAdminDeleteProduct = (id) => del(`/auth/api/admin/products/${id}`);

@@ -10,6 +10,8 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import SettingsPage from "./pages/SettingsPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import ProductsManagementPage from "./pages/ProductsManagementPage";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -22,9 +24,11 @@ createRoot(document.getElementById("root")).render(
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<App />} />
+              <Route path="/products/:slug" element={<ProductDetailPage />} />
             </Route>
             <Route element={<AdminRoute />}>
               <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/settings/products" element={<ProductsManagementPage />} />
             </Route>
           </Routes>
         </AuthProvider>

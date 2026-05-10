@@ -1,13 +1,25 @@
+import os
+import sys
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+# Alembic invokes env.py from inside alembic/, so the project root needs to be
+# on sys.path before we can import the `app` package.
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from app.config import settings
 from app.models import Base
 
 config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+# Always derive the connection URL from the runtime config so the value used
+# at deploy time wins over the dev placeholder in alembic.ini. Alembic needs a
+# sync driver, so we use the psycopg2 flavour exposed by Settings.
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL_SYNC)
 
 target_metadata = Base.metadata
 

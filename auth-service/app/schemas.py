@@ -172,3 +172,83 @@ class SettingOut(BaseModel):
 class UpdateSettingsRequest(BaseModel):
     """Bulk-update payload for global settings: ``{ key: value }``."""
     settings: dict[str, str]
+
+
+# ── Products ──
+
+class ProductOut(BaseModel):
+    """Outbound product shape used by both the public landing page and admin UI.
+
+    Returns all fields including bilingual copy so the frontend can pick the
+    active locale client-side. ``screenshots`` is an array of URL strings.
+    """
+    id: uuid.UUID
+    slug: str
+    icon_name: str
+    url: str
+    video_url: str | None
+    screenshots: list[str]
+    is_visible: bool
+    sort_order: int
+    title_en: str
+    title_ar: str
+    description_en: str
+    description_ar: str
+    problem_en: str
+    problem_ar: str
+    solution_en: str
+    solution_ar: str
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class CreateProductRequest(BaseModel):
+    """Admin-create payload. ``slug`` must be unique and URL-safe."""
+    slug: str
+    icon_name: str = "Package"
+    url: str
+    video_url: str | None = None
+    screenshots: list[str] = []
+    is_visible: bool = True
+    sort_order: int = 0
+    title_en: str
+    title_ar: str
+    description_en: str = ""
+    description_ar: str = ""
+    problem_en: str = ""
+    problem_ar: str = ""
+    solution_en: str = ""
+    solution_ar: str = ""
+
+    @field_validator("slug")
+    @classmethod
+    def validate_slug(cls, v: str) -> str:
+        """Constrain to lowercase letters, digits, and hyphens — safe in URLs."""
+        if not v or not all(c.isalnum() or c == "-" for c in v):
+            raise ValueError("Slug must contain only letters, digits, and hyphens")
+        return v.lower()
+
+
+class UpdateProductRequest(BaseModel):
+    """Admin-update payload. All fields optional — partial update.
+
+    ``slug`` cannot be changed after creation; if you need a different slug,
+    create a new product and delete the old one (URL changes shouldn't sneak
+    in via edit).
+    """
+    icon_name: str | None = None
+    url: str | None = None
+    video_url: str | None = None
+    screenshots: list[str] | None = None
+    is_visible: bool | None = None
+    sort_order: int | None = None
+    title_en: str | None = None
+    title_ar: str | None = None
+    description_en: str | None = None
+    description_ar: str | None = None
+    problem_en: str | None = None
+    problem_ar: str | None = None
+    solution_en: str | None = None
+    solution_ar: str | None = None

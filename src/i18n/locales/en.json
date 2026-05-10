@@ -70,22 +70,43 @@
     "intro": "Purpose-built applications and platforms designed to accelerate AI adoption across the Middle East.",
     "statusLive": "Live",
     "launch": "Launch Application",
+    "learnMore": "Learn More",
     "items": {
       "creativeContent": {
         "title": "Creative Content Agent",
-        "description": "AI-powered presentation builder that transforms briefs into polished, brand-compliant KPMG slide decks in seconds."
+        "description": "AI-powered presentation builder that transforms briefs into polished, brand-compliant KPMG slide decks in seconds.",
+        "problem": "Consultants spend hours hand-crafting decks for every client engagement — copying boilerplate slides, hunting for logos, and reformatting content to match brand guidelines. The result is wasted billable time and inconsistent visual quality.",
+        "solution": "Creative Content Agent turns a short brief into a fully branded slide deck in seconds. It assembles slides from a curated KPMG template library, populates them with AI-generated narrative tuned to the brief, and enforces typography, colour, and layout rules so every output looks like it came from the same studio."
       },
       "sahab": {
         "title": "Sahab Data Platform",
-        "description": "A centralized, governed data platform for ingestion, transformation, cataloging, and serving — built for Middle East enterprise scale."
+        "description": "A centralized, governed data platform for ingestion, transformation, cataloging, and serving — built for Middle East enterprise scale.",
+        "problem": "Enterprise data lives in dozens of disconnected systems, each with its own schema, refresh cadence, and access policy. Analytics teams spend more time wrangling pipelines than producing insights, and governance is enforced inconsistently — if at all.",
+        "solution": "Sahab unifies ingestion, transformation, cataloging, and serving on a single governed substrate. Out-of-the-box connectors pull from common enterprise sources, lineage is captured automatically, and a central catalogue makes discovery and access requests a one-click flow — without sacrificing the controls regulators expect."
       },
       "dataOwner": {
         "title": "Data Owner Agent",
-        "description": "An intelligent assistant that helps data owners manage classification, business definitions, quality rules, and PII detection across their data assets."
+        "description": "An intelligent assistant that helps data owners manage classification, business definitions, quality rules, and PII detection across their data assets.",
+        "problem": "Data ownership at scale is a thankless job: thousands of tables, no canonical definitions, ambiguous classification, and no easy way to spot PII before it leaks downstream. Owners default to manual spot-checks and stale spreadsheets.",
+        "solution": "Data Owner Agent profiles assets continuously, suggests classifications and business definitions, flags PII candidates, and auto-generates quality rules from observed patterns. Owners review and approve in a single console — turning weeks of manual stewardship into hours of curation."
       },
       "compliance": {
         "title": "Compliance Platform",
-        "description": "Automated regulatory compliance checker against regional frameworks (NDMO, PDPL, SAMA, DGA, SDAIA)."
+        "description": "Automated regulatory compliance checker against regional frameworks (NDMO, PDPL, SAMA, DGA, SDAIA).",
+        "problem": "Regional data and AI regulations (NDMO, PDPL, SAMA, DGA, SDAIA) overlap and evolve constantly. Compliance teams chase each new directive with manual gap assessments, leaving organizations exposed during the lag.",
+        "solution": "The Compliance Platform encodes each framework as a machine-readable ruleset and runs continuous checks against your live policies, controls, and data flows. Findings come pre-mapped to the originating regulation, with remediation guidance and audit-ready evidence trails."
+      },
+      "eaArch": {
+        "title": "EA Arch Agent",
+        "description": "An enterprise-architecture assistant that drafts target-state blueprints, traces capability-to-system mappings, and accelerates architecture reviews.",
+        "problem": "Enterprise architects burn weeks producing target-state diagrams, capability maps, and ADRs by hand. By the time the artefacts are reviewed, the underlying systems have already drifted — making the documents stale on arrival.",
+        "solution": "EA Arch Agent ingests your existing architecture inventory and generates target-state blueprints, capability-to-system mappings, and decision records in minutes. It keeps artefacts in lockstep with reality by re-running on schedule and flagging drift, so reviews focus on judgment, not redrawing boxes."
+      },
+      "khda": {
+        "title": "KHDA Data Platform",
+        "description": "A purpose-built data platform for KHDA — ingesting, governing, and analyzing education-sector data to power policy and oversight.",
+        "problem": "Education-sector oversight requires consolidating data from hundreds of schools, training providers, and licensing systems — each reporting in different formats on different cadences. Manual consolidation delays insight and erodes confidence in published indicators.",
+        "solution": "The KHDA Data Platform standardizes ingestion across all reporting entities, applies KHDA-specific governance and quality rules, and exposes a unified analytical layer for policy teams and inspectors. Indicators are recomputed on every refresh, with full lineage from source to dashboard."
       }
     }
   },
@@ -105,6 +126,22 @@
   "userMenu": {
     "settings": "Settings",
     "logout": "Log out"
+  },
+  "productDetail": {
+    "back": "Back to products",
+    "openApp": "Open Application",
+    "problemEyebrow": "The Challenge",
+    "problemTitle": "Problem We Solve",
+    "solutionEyebrow": "Our Approach",
+    "solutionTitle": "How It Works",
+    "screenshotsEyebrow": "See It In Action",
+    "screenshotsTitle": "Screenshots",
+    "screenshotsPlaceholder": "Screenshots coming soon",
+    "videoEyebrow": "Watch The Walkthrough",
+    "videoTitle": "Product Video",
+    "videoPlaceholder": "Video coming soon",
+    "ctaHeadline": "Ready to try it?",
+    "ctaDescription": "Open the application in a new tab. You'll be prompted to sign in if you haven't already."
   },
   "auth": {
     "common": {
@@ -177,6 +214,10 @@
   "settings": {
     "home": "Home",
     "title": "Settings",
+    "tabs": {
+      "users": "Users",
+      "products": "Products"
+    },
     "globalSettings": "Global Settings",
     "publicSignup": "Public signup",
     "publicSignupDescription": "Allow new users to create accounts",
@@ -228,6 +269,52 @@
       "data-owner": "Data Owner Agent",
       "ai-data-landing": "AI Data Landing",
       "ragflow": "RAGFlow"
+    }
+  },
+  "productsAdmin": {
+    "headerTitle": "Products",
+    "addProduct": "Add product",
+    "createTitle": "Create product",
+    "editTitle": "Edit product",
+    "confirmDelete": "Delete product",
+    "confirmDeleteBody": "Permanently delete \"{name}\"? This cannot be undone — use Hide if you only want to remove it from the public listing.",
+    "deleteAction": "Delete permanently",
+    "hideAction": "Hide",
+    "showAction": "Show",
+    "openLive": "Open",
+    "hasVideo": "Video",
+    "visible": "Visible",
+    "hidden": "Hidden",
+    "visibleLabel": "Show on landing page",
+    "emptyState": "No products yet. Click \"Add product\" to create the first one.",
+    "englishSection": "English content",
+    "arabicSection": "المحتوى بالعربية",
+    "columns": {
+      "title": "Product",
+      "slug": "Slug",
+      "order": "Order",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "fields": {
+      "slug": "Slug",
+      "icon": "Icon",
+      "url": "External URL",
+      "videoUrl": "Video URL",
+      "screenshots": "Screenshots",
+      "title": "Title",
+      "description": "Short description",
+      "problem": "Problem statement",
+      "solution": "Solution / how it works",
+      "sortOrder": "Sort order",
+      "visibility": "Visibility"
+    },
+    "hints": {
+      "slug": "URL-safe identifier. Cannot be changed after creation.",
+      "url": "Where the \"Open Application\" button takes the user (new tab).",
+      "videoUrl": "Optional. Embeddable URL (e.g. YouTube /embed/...).",
+      "screenshots": "One image URL per line. Leave empty to show a placeholder.",
+      "sortOrder": "Lower numbers appear first."
     }
   },
   "errors": {

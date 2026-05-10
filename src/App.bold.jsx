@@ -1,18 +1,16 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import UserMenu from "./components/UserMenu";
 import { useI18n, useT } from "./i18n/i18n";
+import { getProductIcon } from "./data/icons";
+import { apiGetProducts } from "./api/auth";
 import {
   Brain,
   Route,
   Server,
   Factory,
   Lightbulb,
-  Presentation,
-  DatabaseZap,
-  Warehouse,
-  ShieldCheck,
   Cloud,
-  ArrowUpRight,
   ArrowRight,
   Menu,
   X,
@@ -33,31 +31,6 @@ const services = [
   { icon: Factory, i18nKey: "factories" },
   { icon: Lightbulb, i18nKey: "solutions" },
   { icon: Cloud, i18nKey: "cloud" },
-];
-
-// Product catalogue. URL stays hard-coded since it is not user-facing copy;
-// title and description are looked up by `i18nKey`.
-const products = [
-  {
-    icon: Presentation,
-    i18nKey: "creativeContent",
-    url: "https://digital-foundation.uksouth.cloudapp.azure.com/slide-generator/login",
-  },
-  {
-    icon: Warehouse,
-    i18nKey: "sahab",
-    url: "https://digital-foundation.uksouth.cloudapp.azure.com/cloudsahab/",
-  },
-  {
-    icon: DatabaseZap,
-    i18nKey: "dataOwner",
-    url: "https://digital-foundation.uksouth.cloudapp.azure.com/dataowner/",
-  },
-  {
-    icon: ShieldCheck,
-    i18nKey: "compliance",
-    url: "https://digital-foundation.uksouth.cloudapp.azure.com/AICompAgent/login",
-  },
 ];
 
 // Marketing stats. Numeric `value` and `suffix` stay neutral; the label
@@ -670,10 +643,11 @@ function Services() {
    ═══════════════════════════════════════════ */
 
 /**
- * Single product tile. Renders as a clickable link when live, otherwise as a
- * dimmed static card. The "Launch Application" CTA only appears for live items.
+ * Single product tile. Clicking navigates to the in-app product detail page.
+ * The detail page is where "Open Application" lives — clicking the card no
+ * longer launches the external app directly.
  */
-function ProductCard({ icon: Icon, title, description, url, status, launchLabel, isLive }) {
+function ProductCard({ icon: Icon, title, description, slug, status, learnMoreLabel, isLive }) {
   const inner = (
     <div
       className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border p-7 transition-all duration-500 lg:p-8 ${
@@ -722,13 +696,13 @@ function ProductCard({ icon: Icon, title, description, url, status, launchLabel,
         {description}
       </p>
 
-      {/* Launch link */}
+      {/* Learn more link */}
       {isLive && (
         <div className="mt-6 flex items-center gap-2 text-[11px] font-bold tracking-[0.12em] text-accent/60 uppercase transition-colors duration-300 group-hover:text-accent">
-          {launchLabel}
-          <ArrowUpRight
+          {learnMoreLabel}
+          <ArrowRight
             size={13}
-            className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            className="transition-transform duration-300 group-hover:translate-x-0.5"
           />
         </div>
       )}
@@ -737,26 +711,35 @@ function ProductCard({ icon: Icon, title, description, url, status, launchLabel,
 
   if (isLive) {
     return (
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block h-full"
-      >
+      <Link to={`/products/${slug}`} className="block h-full">
         {inner}
-      </a>
+      </Link>
     );
   }
   return inner;
 }
 
 /**
- * Products section. All items currently ship as "Live"; the card component
- * still supports a non-live state for future entries.
+ * Products section. Fetches the visible-products list from the auth-service
+ * on mount and renders each as a card. Falls back gracefully (empty list)
+ * if the request fails so the rest of the page still renders.
  */
 function Products() {
   const t = useT();
+  const { lang } = useI18n();
   const [ref, inView] = useInView();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    apiGetProducts()
+      .then(setProducts)
+      .catch(() => setProducts([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Pick a per-row text field in the active locale, falling back to English.
+  const pick = (p, field) => p[`${field}_${lang}`] || p[`${field}_en`];
 
   return (
     <section id="products" className="relative bg-[#0a0a0a] py-28 lg:py-36">
@@ -784,27 +767,33 @@ function Products() {
           ref={ref}
           className="mt-16 grid gap-5 grid-cols-1"
         >
-          {products.map((product, i) => (
-            <div
-              key={product.i18nKey}
-              className={`transition-all duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                inView
-                  ? "translate-y-0 opacity-100"
-                  : "translate-y-10 opacity-0"
-              }`}
-              style={{ transitionDelay: inView ? `${i * 100}ms` : "0ms" }}
-            >
-              <ProductCard
-                icon={product.icon}
-                url={product.url}
-                isLive={true}
-                title={t(`products.items.${product.i18nKey}.title`)}
-                description={t(`products.items.${product.i18nKey}.description`)}
-                status={t("products.statusLive")}
-                launchLabel={t("products.launch")}
-              />
+          {loading ? (
+            <div className="flex justify-center py-16">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent/20 border-t-accent" />
             </div>
-          ))}
+          ) : (
+            products.map((product, i) => (
+              <div
+                key={product.id}
+                className={`transition-all duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  inView
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-10 opacity-0"
+                }`}
+                style={{ transitionDelay: inView ? `${i * 100}ms` : "0ms" }}
+              >
+                <ProductCard
+                  icon={getProductIcon(product.icon_name)}
+                  slug={product.slug}
+                  isLive={true}
+                  title={pick(product, "title")}
+                  description={pick(product, "description")}
+                  status={t("products.statusLive")}
+                  learnMoreLabel={t("products.learnMore")}
+                />
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>
