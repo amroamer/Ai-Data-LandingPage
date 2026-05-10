@@ -176,11 +176,21 @@ class UpdateSettingsRequest(BaseModel):
 
 # ── Products ──
 
+class PhaseItem(BaseModel):
+    """One step in a product's "How it works" strip — name + caption."""
+    name: str = ""
+    caption: str = ""
+
+
 class ProductOut(BaseModel):
     """Outbound product shape used by both the public landing page and admin UI.
 
     Returns all fields including bilingual copy so the frontend can pick the
     active locale client-side. ``screenshots`` is an array of URL strings.
+    ``phases_*`` and ``deliverables_*`` power the modal's "How it works" and
+    "Key capabilities" sections respectively. ``problem_*`` / ``solution_*`` /
+    ``video_url`` remain on the model for back-compat — the landing-page
+    modal no longer renders them, but values are preserved in the DB.
     """
     id: uuid.UUID
     slug: str
@@ -198,6 +208,17 @@ class ProductOut(BaseModel):
     problem_ar: str
     solution_en: str
     solution_ar: str
+    phases_en: list[PhaseItem] = []
+    phases_ar: list[PhaseItem] = []
+    deliverables_en: list[str] = []
+    deliverables_ar: list[str] = []
+    # Just the filename — the heavy ppt_data column is loaded lazily and
+    # returned only by the dedicated download endpoint. The frontend uses
+    # this field to decide whether to render the Download button.
+    ppt_filename: str | None = None
+    # Industry tags as slug strings. Empty list = no industry filter applied
+    # — product appears under "All Industries" only.
+    industries: list[str] = []
     created_at: datetime
     updated_at: datetime
 
@@ -221,6 +242,16 @@ class CreateProductRequest(BaseModel):
     problem_ar: str = ""
     solution_en: str = ""
     solution_ar: str = ""
+    phases_en: list[PhaseItem] = []
+    phases_ar: list[PhaseItem] = []
+    deliverables_en: list[str] = []
+    deliverables_ar: list[str] = []
+    # Optional sample PowerPoint. `ppt_data` holds the full base64 data URI
+    # and `ppt_filename` holds the filename used for the download
+    # Content-Disposition. Both nullable — most products don't ship a deck.
+    ppt_filename: str | None = None
+    ppt_data: str | None = None
+    industries: list[str] = []
 
     @field_validator("slug")
     @classmethod
@@ -252,3 +283,11 @@ class UpdateProductRequest(BaseModel):
     problem_ar: str | None = None
     solution_en: str | None = None
     solution_ar: str | None = None
+    phases_en: list[PhaseItem] | None = None
+    phases_ar: list[PhaseItem] | None = None
+    deliverables_en: list[str] | None = None
+    deliverables_ar: list[str] | None = None
+    # Sample PowerPoint — passing `null` here clears the existing deck.
+    ppt_filename: str | None = None
+    ppt_data: str | None = None
+    industries: list[str] | None = None

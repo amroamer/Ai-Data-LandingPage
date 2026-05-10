@@ -106,6 +106,31 @@ class Product(Base):
     solution_en: Mapped[str] = mapped_column(Text, nullable=False, default="")
     solution_ar: Mapped[str] = mapped_column(Text, nullable=False, default="")
 
+    # `phases_*` is a JSONB list of `{"name": str, "caption": str}` objects
+    # rendered as the numbered process strip in the landing-page modal.
+    # `deliverables_*` is a JSONB list of plain strings rendered as the
+    # capability cards. Both default to empty arrays so older rows and new
+    # creates that haven't supplied them yet keep working.
+    phases_en: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    phases_ar: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    deliverables_en: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    deliverables_ar: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+
+    # Sample PowerPoint that end-users can download from the product modal.
+    # `ppt_data` holds the full file as a base64 data URI (e.g. ~30MB for a
+    # heavy deck) and is `deferred=True` so listing queries don't drag it
+    # into memory — only the dedicated download endpoint loads it. The
+    # filename column is light and ships with normal product responses so
+    # the frontend knows whether to render the Download button.
+    ppt_filename: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    ppt_data: Mapped[str | None] = mapped_column(Text, nullable=True, deferred=True)
+
+    # Industry tags powering the landing-page filter strip. Stored as a
+    # JSONB list of slug strings (e.g. ["public-sector", "financial-services"])
+    # so adding a fourth industry later is a no-migration change. Empty
+    # array = "applies to all industries" for filter purposes.
+    industries: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )

@@ -1,13 +1,30 @@
+import base64
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import undefer
 
 from app.database import get_db
 from app.dependencies import require_admin
 from app.models import Product
 from app.schemas import CreateProductRequest, ProductOut, UpdateProductRequest
+
+
+def _parse_data_uri(uri: str) -> tuple[str, bytes]:
+    """Split a `data:<mime>;base64,<payload>` string into (mimetype, bytes).
+
+    Falls back to ``application/octet-stream`` when the URI is malformed or
+    missing a mimetype prefix. Raises if base64 decoding fails — the caller
+    converts that into a 500 since a corrupt blob in the DB is a bug, not
+    a 4xx.
+    """
+    if not uri.startswith("data:"):
+        return "application/octet-stream", base64.b64decode(uri)
+    header, _, payload = uri.partition(",")
+    mimetype = header.removeprefix("data:").split(";", 1)[0] or "application/octet-stream"
+    return mimetype, base64.b64decode(payload)
 
 # Public router — visible-only listing + single-product read. No auth.
 public_router = APIRouter(prefix="/auth/api/products", tags=["products"])
@@ -51,6 +68,37 @@ async def get_visible_product(slug: str, db: AsyncSession = Depends(get_db)):
     if product is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     return product
+
+
+@public_router.get("/{slug}/ppt")
+async def download_product_ppt(slug: str, db: AsyncSession = Depends(get_db)):
+    """Stream the sample PowerPoint for a product as an attachment download.
+
+    Uses `undefer` to pull the heavy `ppt_data` column that's normally
+    skipped by the listing query. Returns 404 when the product is hidden,
+    missing, or has no PPT attached. The Content-Disposition header carries
+    the original filename so the browser saves with the right extension.
+    """
+    result = await db.execute(
+        select(Product)
+        .options(undefer(Product.ppt_data))
+        .where(Product.slug == slug, Product.is_visible.is_(True))
+    )
+    product = result.scalar_one_or_none()
+    if product is None or not product.ppt_data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Presentation not available"
+        )
+
+    mimetype, content = _parse_data_uri(product.ppt_data)
+    filename = product.ppt_filename or f"{slug}.pptx"
+    # Quote the filename so spaces / special chars don't break the header.
+    safe_filename = filename.replace('"', "")
+    return Response(
+        content=content,
+        media_type=mimetype,
+        headers={"Content-Disposition": f'attachment; filename="{safe_filename}"'},
+    )
 
 
 # ── Admin endpoints ──

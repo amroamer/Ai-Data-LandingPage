@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import UserMenu from "./components/UserMenu";
 import { useI18n, useT } from "./i18n/i18n";
 import { getProductIcon } from "./data/icons";
+import { INDUSTRIES } from "./data/industries";
 import { apiGetProducts } from "./api/auth";
 import {
   Brain,
@@ -12,10 +13,18 @@ import {
   Lightbulb,
   Cloud,
   ArrowRight,
+  ArrowUpRight,
   Menu,
   X,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Globe,
+  CheckCircle2,
+  ImageOff,
+  Film,
+  Maximize2,
+  Download,
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════
@@ -566,11 +575,16 @@ function Stats() {
 
 /**
  * Single service tile. Pure presentational — copy is supplied by the parent
- * after locale lookup so this stays locale-agnostic.
+ * after locale lookup so this stays locale-agnostic. Clicking opens the
+ * detail modal via the supplied `onClick` handler.
  */
-function ServiceCard({ icon: Icon, title, description }) {
+function ServiceCard({ icon: Icon, title, description, onClick, learnMoreLabel }) {
   return (
-    <div className="group rounded-2xl border border-white/[0.06] bg-[#111111] p-7 transition-all duration-500 hover:-translate-y-1 hover:border-kpmg-glow/20 hover:shadow-xl hover:shadow-kpmg/[0.06]">
+    <button
+      type="button"
+      onClick={onClick}
+      className="group relative w-full overflow-hidden rounded-2xl border border-white/[0.06] bg-[#111111] p-7 text-start transition-all duration-500 hover:-translate-y-1 hover:border-kpmg-glow/20 hover:shadow-xl hover:shadow-kpmg/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-kpmg-glow/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f] cursor-pointer"
+    >
       <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-kpmg/10 text-kpmg-glow transition-colors duration-300 group-hover:bg-kpmg/15">
         <Icon size={22} strokeWidth={1.5} />
       </div>
@@ -580,17 +594,192 @@ function ServiceCard({ icon: Icon, title, description }) {
       <p className="text-[13px] leading-relaxed text-white/35">
         {description}
       </p>
+      <span className="mt-5 inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.18em] uppercase text-kpmg-glow/80 transition-all duration-300 group-hover:gap-2.5 group-hover:text-kpmg-glow">
+        {learnMoreLabel}
+        <ArrowRight size={13} strokeWidth={2} className="rtl:-scale-x-100" />
+      </span>
+    </button>
+  );
+}
+
+/**
+ * Modal overlay that surfaces the long-form details for a single service.
+ * Closes on backdrop click, on Escape, and on the close button. Locks body
+ * scroll while open. Render with `service={null}` to keep it dismissed.
+ */
+function ServiceDetailModal({ service, onClose }) {
+  const t = useT();
+
+  // Esc-to-close + body-scroll lock for the duration of the modal lifetime.
+  useEffect(() => {
+    if (!service) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [service, onClose]);
+
+  if (!service) return null;
+
+  const Icon = service.icon;
+  const key = service.i18nKey;
+  const phasesRaw = t(`services.items.${key}.phases`);
+  const phaseList = Array.isArray(phasesRaw) ? phasesRaw : [];
+  const bullets = t(`services.items.${key}.bullets`);
+  const bulletList = Array.isArray(bullets) ? bullets : [];
+
+  // Inline SVG dot pattern for the hero band — keeps the asset self-contained
+  // and color-controllable via opacity rather than shipping a PNG.
+  const dotPattern = {
+    backgroundImage:
+      "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
+    backgroundSize: "22px 22px",
+  };
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="service-modal-title"
+      className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-8 sm:px-6"
+    >
+      <div
+        className="absolute inset-0 bg-black/75 backdrop-blur-sm animate-[fadeIn_200ms_ease-out]"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      <div className="relative w-full max-w-3xl overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0f0f0f] shadow-2xl shadow-black/60 animate-[scaleIn_240ms_cubic-bezier(0.16,1,0.3,1)]">
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={t("services.closeLabel")}
+          className="absolute end-5 top-5 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.08] bg-black/40 text-white/60 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-black/60 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-kpmg-glow/40 cursor-pointer"
+        >
+          <X size={16} strokeWidth={2} />
+        </button>
+
+        <div className="max-h-[88vh] overflow-y-auto">
+          {/* Hero band — gradient backdrop, dotted pattern, large iconography */}
+          <div className="relative overflow-hidden border-b border-white/[0.06] bg-gradient-to-br from-kpmg/[0.18] via-kpmg/[0.05] to-transparent px-8 pt-10 pb-9 sm:px-10 sm:pt-12 sm:pb-10">
+            <div
+              className="absolute inset-0 opacity-60"
+              style={dotPattern}
+              aria-hidden="true"
+            />
+            <div
+              className="absolute -top-20 -end-16 h-48 w-48 rounded-full bg-kpmg-glow/10 blur-3xl"
+              aria-hidden="true"
+            />
+
+            <div className="relative flex items-start gap-5">
+              <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl border border-kpmg-glow/25 bg-kpmg/15 text-kpmg-glow shadow-lg shadow-kpmg/20">
+                <Icon size={30} strokeWidth={1.5} />
+              </div>
+              <div className="min-w-0 flex-1 pt-1">
+                <span className="font-display text-[10px] font-bold tracking-[0.28em] text-kpmg-glow uppercase">
+                  {t("services.eyebrow")}
+                </span>
+                <h3
+                  id="service-modal-title"
+                  className="mt-2 font-display text-2xl font-extrabold tracking-[-0.01em] text-white sm:text-3xl"
+                >
+                  {t(`services.items.${key}.title`)}
+                </h3>
+              </div>
+            </div>
+
+            <p className="relative mt-5 text-sm leading-relaxed text-white/55 sm:text-[15px]">
+              {t(`services.items.${key}.description`)}
+            </p>
+          </div>
+
+          {/* Body — approach phases + deliverables */}
+          <div className="px-8 py-9 sm:px-10 sm:py-10">
+            {phaseList.length > 0 && (
+              <div>
+                <div className="flex items-baseline gap-3">
+                  <h4 className="font-display text-[10px] font-bold tracking-[0.28em] text-kpmg-glow uppercase">
+                    {t("services.approachLabel")}
+                  </h4>
+                  <span className="h-px flex-1 bg-gradient-to-r from-kpmg-glow/30 to-transparent rtl:bg-gradient-to-l" />
+                </div>
+
+                <p className="mt-4 text-sm leading-relaxed text-white/55 sm:text-[15px]">
+                  {t(`services.items.${key}.details`)}
+                </p>
+
+                <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  {phaseList.map((phase, idx) => (
+                    <div
+                      key={idx}
+                      className="group relative rounded-xl border border-white/[0.06] bg-white/[0.015] p-4 transition-all duration-300 hover:border-kpmg-glow/25 hover:bg-white/[0.03]"
+                    >
+                      <div
+                        className="absolute -top-2.5 start-4 flex h-6 w-9 items-center justify-center rounded-md border border-kpmg-glow/25 bg-[#0f0f0f] font-display text-[10px] font-bold tracking-[0.1em] text-kpmg-glow"
+                      >
+                        {String(idx + 1).padStart(2, "0")}
+                      </div>
+                      <h5 className="mt-2 font-display text-[12px] font-bold tracking-[0.14em] text-white uppercase">
+                        {phase.name}
+                      </h5>
+                      <p className="mt-2 text-[12.5px] leading-relaxed text-white/45">
+                        {phase.caption}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {bulletList.length > 0 && (
+              <div className="mt-10">
+                <div className="flex items-baseline gap-3">
+                  <h4 className="font-display text-[10px] font-bold tracking-[0.28em] text-kpmg-glow uppercase">
+                    {t("services.deliverablesLabel")}
+                  </h4>
+                  <span className="h-px flex-1 bg-gradient-to-r from-kpmg-glow/30 to-transparent rtl:bg-gradient-to-l" />
+                </div>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {bulletList.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start gap-3 rounded-xl border border-white/[0.06] bg-white/[0.015] p-4 transition-all duration-300 hover:border-kpmg-glow/20 hover:bg-white/[0.03]"
+                    >
+                      <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-kpmg/12 text-kpmg-glow">
+                        <CheckCircle2 size={14} strokeWidth={2} />
+                      </span>
+                      <span className="text-[13.5px] leading-relaxed text-white/70">
+                        {item}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 /**
  * Services section. Reads the service catalogue and resolves
- * each item's title/description against the active locale.
+ * each item's title/description against the active locale. Cards open
+ * a modal with longer copy and a deliverables list.
  */
 function Services() {
   const t = useT();
   const [ref, inView] = useInView();
+  const [selected, setSelected] = useState(null);
 
   return (
     <section id="services" className="relative bg-[#0f0f0f] py-28 lg:py-36">
@@ -629,11 +818,15 @@ function Services() {
                 icon={service.icon}
                 title={t(`services.items.${service.i18nKey}.title`)}
                 description={t(`services.items.${service.i18nKey}.description`)}
+                learnMoreLabel={t("services.learnMoreLabel")}
+                onClick={() => setSelected(service)}
               />
             </div>
           ))}
         </div>
       </div>
+
+      <ServiceDetailModal service={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }
@@ -643,14 +836,14 @@ function Services() {
    ═══════════════════════════════════════════ */
 
 /**
- * Single product tile. Clicking navigates to the in-app product detail page.
- * The detail page is where "Open Application" lives — clicking the card no
- * longer launches the external app directly.
+ * Single product tile. Clicking opens the product detail modal via the
+ * supplied `onClick` handler. The modal — not the card — exposes the
+ * "Open Application" CTA.
  */
-function ProductCard({ icon: Icon, title, description, slug, status, learnMoreLabel, isLive }) {
+function ProductCard({ icon: Icon, title, description, status, learnMoreLabel, isLive, onClick }) {
   const inner = (
     <div
-      className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border p-7 transition-all duration-500 lg:p-8 ${
+      className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border p-7 text-start transition-all duration-500 lg:p-8 ${
         isLive
           ? "border-white/[0.06] bg-[#111111] hover:-translate-y-1 hover:border-accent/25 hover:shadow-2xl hover:shadow-accent/[0.04]"
           : "border-white/[0.04] bg-[#0d0d0d] opacity-60"
@@ -702,7 +895,7 @@ function ProductCard({ icon: Icon, title, description, slug, status, learnMoreLa
           {learnMoreLabel}
           <ArrowRight
             size={13}
-            className="transition-transform duration-300 group-hover:translate-x-0.5"
+            className="transition-transform duration-300 group-hover:translate-x-0.5 rtl:-scale-x-100"
           />
         </div>
       )}
@@ -711,12 +904,447 @@ function ProductCard({ icon: Icon, title, description, slug, status, learnMoreLa
 
   if (isLive) {
     return (
-      <Link to={`/products/${slug}`} className="block h-full">
+      <button
+        type="button"
+        onClick={onClick}
+        className="block w-full h-full text-start cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] rounded-2xl"
+      >
         {inner}
-      </Link>
+      </button>
     );
   }
   return inner;
+}
+
+/**
+ * Modal overlay that surfaces a single product's details: hero band with
+ * launch CTA, problem/solution columns, screenshots, and video. Closes on
+ * backdrop click, Escape, and the close button. Locks body scroll while open.
+ * Render with `product={null}` to keep dismissed.
+ */
+function ProductDetailModal({ product, onClose }) {
+  const t = useT();
+  const { lang } = useI18n();
+  // null = lightbox closed; integer = the index of the screenshot being
+  // viewed full-size. Lightbox renders as a sibling overlay above the modal.
+  const [lightboxIdx, setLightboxIdx] = useState(null);
+
+  // Esc-to-close + arrow-key navigation + body-scroll lock. Esc collapses
+  // the lightbox first if it's open, otherwise closes the modal — matches
+  // the user's mental model of "back out one layer at a time".
+  useEffect(() => {
+    if (!product) return;
+    const screenshots = product.screenshots || [];
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        if (lightboxIdx !== null) setLightboxIdx(null);
+        else onClose();
+      } else if (lightboxIdx !== null && screenshots.length > 1) {
+        if (e.key === "ArrowLeft") {
+          setLightboxIdx((i) => (i - 1 + screenshots.length) % screenshots.length);
+        } else if (e.key === "ArrowRight") {
+          setLightboxIdx((i) => (i + 1) % screenshots.length);
+        }
+      }
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [product, onClose, lightboxIdx]);
+
+  // Reset the lightbox whenever the modal opens for a different product so
+  // the next click on screenshots doesn't surface a stale index.
+  useEffect(() => {
+    setLightboxIdx(null);
+  }, [product?.id]);
+
+  if (!product) return null;
+
+  const Icon = getProductIcon(product.icon_name);
+  const pick = (field) => product[`${field}_${lang}`] || product[`${field}_en`];
+  const title = pick("title");
+  const description = pick("description");
+
+  // Phases + deliverables now come from the product row (admin-editable in
+  // the management page). Fall back to the English copy when the active
+  // locale is empty, then to an empty array — sections without content
+  // quietly hide.
+  const pickList = (field) => {
+    const localised = product[`${field}_${lang}`];
+    if (Array.isArray(localised) && localised.length > 0) return localised;
+    const fallback = product[`${field}_en`];
+    return Array.isArray(fallback) ? fallback : [];
+  };
+  const phaseList = pickList("phases");
+  const deliverableList = pickList("deliverables");
+
+  const hasScreenshots = Array.isArray(product.screenshots) && product.screenshots.length > 0;
+
+  // Inline SVG dot pattern for the hero band — matches the service modal so
+  // the two surfaces feel like the same component family.
+  const dotPattern = {
+    backgroundImage:
+      "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
+    backgroundSize: "22px 22px",
+  };
+
+  return (
+    <>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="product-modal-title"
+      className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-8 sm:px-6"
+    >
+      <div
+        className="absolute inset-0 bg-black/75 backdrop-blur-sm animate-[fadeIn_200ms_ease-out]"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      <div className="relative w-full max-w-4xl overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0f0f0f] shadow-2xl shadow-black/60 animate-[scaleIn_240ms_cubic-bezier(0.16,1,0.3,1)]">
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={t("services.closeLabel")}
+          className="absolute end-5 top-5 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.08] bg-black/40 text-white/60 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-black/60 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 cursor-pointer"
+        >
+          <X size={16} strokeWidth={2} />
+        </button>
+
+        <div className="max-h-[88vh] overflow-y-auto">
+          {/* Hero band — gradient backdrop + icon + status + launch CTA */}
+          <div className="relative overflow-hidden border-b border-white/[0.06] bg-gradient-to-br from-accent/[0.16] via-accent/[0.04] to-transparent px-8 pt-10 pb-9 sm:px-10 sm:pt-12 sm:pb-10">
+            <div
+              className="absolute inset-0 opacity-60"
+              style={dotPattern}
+              aria-hidden="true"
+            />
+            <div
+              className="absolute -top-20 -end-16 h-48 w-48 rounded-full bg-accent/10 blur-3xl"
+              aria-hidden="true"
+            />
+
+            <div className="relative flex items-start gap-5">
+              <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl border border-accent/25 bg-accent/15 text-accent shadow-lg shadow-accent/20">
+                <Icon size={30} strokeWidth={1.5} />
+              </div>
+              <div className="min-w-0 flex-1 pt-1">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="font-display text-[10px] font-bold tracking-[0.28em] text-accent uppercase">
+                    {t("products.eyebrow")}
+                  </span>
+                  <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[9px] font-bold tracking-[0.12em] text-emerald-400 uppercase">
+                    {t("products.statusLive")}
+                  </span>
+                </div>
+                <h3
+                  id="product-modal-title"
+                  className="mt-2 font-display text-2xl font-extrabold tracking-[-0.01em] text-white sm:text-3xl"
+                >
+                  {title}
+                </h3>
+              </div>
+            </div>
+
+            <p className="relative mt-5 max-w-3xl text-sm leading-relaxed text-white/55 sm:text-[15px]">
+              {description}
+            </p>
+
+            <div className="relative mt-6 flex flex-wrap items-center gap-3">
+              <a
+                href={product.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2.5 rounded-full bg-accent px-7 py-3 font-display text-[12px] font-bold tracking-[0.08em] text-white uppercase transition-all duration-300 hover:bg-medium-blue hover:shadow-xl hover:shadow-accent/20"
+              >
+                {t("productDetail.openApp")}
+                <ArrowUpRight
+                  size={14}
+                  className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </a>
+
+              {/* Download button — only rendered when the product has a
+                  presentation attached. Hits the dedicated PPT endpoint
+                  which streams the file with a Content-Disposition header
+                  so the browser saves it instead of navigating to it. */}
+              {product.ppt_filename && (
+                <a
+                  href={`/auth/api/products/${product.slug}/ppt`}
+                  download={product.ppt_filename}
+                  className="group inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 font-display text-[12px] font-bold tracking-[0.08em] text-white uppercase transition-all duration-300 hover:border-accent/30 hover:bg-white/[0.06] hover:shadow-lg hover:shadow-accent/10"
+                >
+                  <Download
+                    size={14}
+                    className="transition-transform duration-300 group-hover:translate-y-0.5"
+                  />
+                  {t("products.modal.downloadPresentation")}
+                </a>
+              )}
+            </div>
+          </div>
+
+          {/* Body — How it works + Capabilities + Sample screenshots */}
+          <div className="px-8 py-9 sm:px-10 sm:py-10">
+            {phaseList.length > 0 && (
+              <div>
+                <div className="flex items-baseline gap-3">
+                  <h4 className="font-display text-[10px] font-bold tracking-[0.28em] text-accent uppercase">
+                    {t("products.modal.approachLabel")}
+                  </h4>
+                  <span className="h-px flex-1 bg-gradient-to-r from-accent/30 to-transparent rtl:bg-gradient-to-l" />
+                </div>
+
+                <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  {phaseList.map((phase, idx) => (
+                    <div
+                      key={idx}
+                      className="group relative rounded-xl border border-white/[0.06] bg-white/[0.015] p-4 transition-all duration-300 hover:border-accent/25 hover:bg-white/[0.03]"
+                    >
+                      <div className="absolute -top-2.5 start-4 flex h-6 w-9 items-center justify-center rounded-md border border-accent/25 bg-[#0f0f0f] font-display text-[10px] font-bold tracking-[0.1em] text-accent">
+                        {String(idx + 1).padStart(2, "0")}
+                      </div>
+                      <h5 className="mt-2 font-display text-[12px] font-bold tracking-[0.14em] text-white uppercase">
+                        {phase.name}
+                      </h5>
+                      <p className="mt-2 text-[12.5px] leading-relaxed text-white/45">
+                        {phase.caption}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {deliverableList.length > 0 && (
+              <div className="mt-10">
+                <div className="flex items-baseline gap-3">
+                  <h4 className="font-display text-[10px] font-bold tracking-[0.28em] text-accent uppercase">
+                    {t("products.modal.deliverablesLabel")}
+                  </h4>
+                  <span className="h-px flex-1 bg-gradient-to-r from-accent/30 to-transparent rtl:bg-gradient-to-l" />
+                </div>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {deliverableList.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start gap-3 rounded-xl border border-white/[0.06] bg-white/[0.015] p-4 transition-all duration-300 hover:border-accent/20 hover:bg-white/[0.03]"
+                    >
+                      <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-accent/12 text-accent">
+                        <CheckCircle2 size={14} strokeWidth={2} />
+                      </span>
+                      <span className="text-[13.5px] leading-relaxed text-white/70">
+                        {item}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Sample screenshots — 2x2 grid. Real screenshots when present;
+                otherwise four styled browser-window mockup tiles so the
+                section feels finished even before media exists. */}
+            <div className="mt-10">
+              <div className="flex items-baseline gap-3">
+                <h4 className="font-display text-[10px] font-bold tracking-[0.28em] text-accent uppercase">
+                  {t("products.modal.screenshotsLabel")}
+                </h4>
+                <span className="h-px flex-1 bg-gradient-to-r from-accent/30 to-transparent rtl:bg-gradient-to-l" />
+              </div>
+
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                {hasScreenshots
+                  ? product.screenshots.map((src, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setLightboxIdx(i)}
+                        className="group/thumb relative overflow-hidden rounded-xl border border-white/[0.06] bg-[#0a0a0a] transition-all duration-300 hover:border-accent/35 hover:shadow-lg hover:shadow-accent/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 cursor-zoom-in"
+                        aria-label={`Open screenshot ${i + 1} full-size`}
+                      >
+                        <img
+                          src={src}
+                          alt={`${title} screenshot ${i + 1}`}
+                          className="aspect-video w-full object-cover transition-transform duration-500 group-hover/thumb:scale-[1.03]"
+                          loading="lazy"
+                        />
+                        <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover/thumb:bg-black/35 group-hover/thumb:opacity-100">
+                          <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/50 text-white backdrop-blur-sm">
+                            <Maximize2 size={16} strokeWidth={2} />
+                          </span>
+                        </span>
+                      </button>
+                    ))
+                  : Array.from({ length: 4 }).map((_, i) => (
+                      <ScreenshotPlaceholder key={i} variant={i} />
+                    ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Lightbox — sibling of the product dialog so its z-index stacks on
+        top. Rendered conditionally when a screenshot is selected. */}
+    {hasScreenshots && lightboxIdx !== null && (
+      <ScreenshotLightbox
+        images={product.screenshots}
+        idx={lightboxIdx}
+        title={title}
+        onClose={() => setLightboxIdx(null)}
+        onPrev={() =>
+          setLightboxIdx(
+            (i) => (i - 1 + product.screenshots.length) % product.screenshots.length
+          )
+        }
+        onNext={() =>
+          setLightboxIdx((i) => (i + 1) % product.screenshots.length)
+        }
+        closeLabel={t("services.closeLabel")}
+      />
+    )}
+    </>
+  );
+}
+
+/**
+ * Full-screen image viewer. Renders above the product modal at z-110 with
+ * a darker backdrop, prev/next chevrons, a counter pill, and close button.
+ * Keyboard handling (Esc, Arrow keys) lives in the parent so it can decide
+ * whether Esc collapses the lightbox or the modal beneath. Click on the
+ * backdrop closes; clicks on the image itself do not propagate.
+ */
+function ScreenshotLightbox({ images, idx, title, onClose, onPrev, onNext, closeLabel }) {
+  const src = images[idx];
+  const hasMany = images.length > 1;
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Screenshot viewer"
+      className="fixed inset-0 z-[110] flex items-center justify-center px-4 py-6 sm:px-12 sm:py-10 animate-[fadeIn_180ms_ease-out]"
+    >
+      <div
+        className="absolute inset-0 bg-black/92 backdrop-blur-sm"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label={closeLabel}
+        className="absolute end-5 top-5 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/40 text-white/75 backdrop-blur-sm transition-all duration-200 hover:border-white/30 hover:bg-black/60 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 cursor-pointer"
+      >
+        <X size={18} strokeWidth={2} />
+      </button>
+
+      {hasMany && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onPrev();
+          }}
+          aria-label="Previous screenshot"
+          className="absolute start-3 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/40 text-white/75 backdrop-blur-sm transition-all duration-200 hover:border-white/30 hover:bg-black/60 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:flex cursor-pointer"
+        >
+          <ChevronLeft size={22} strokeWidth={2} className="rtl:-scale-x-100" />
+        </button>
+      )}
+
+      <img
+        src={src}
+        alt={`${title} screenshot ${idx + 1}`}
+        onClick={(e) => e.stopPropagation()}
+        className="relative max-h-[88vh] max-w-[95vw] rounded-lg object-contain shadow-2xl shadow-black/80 animate-[scaleIn_220ms_cubic-bezier(0.16,1,0.3,1)]"
+      />
+
+      {hasMany && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onNext();
+          }}
+          aria-label="Next screenshot"
+          className="absolute end-3 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/40 text-white/75 backdrop-blur-sm transition-all duration-200 hover:border-white/30 hover:bg-black/60 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:flex cursor-pointer"
+        >
+          <ChevronRight size={22} strokeWidth={2} className="rtl:-scale-x-100" />
+        </button>
+      )}
+
+      <span className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full border border-white/15 bg-black/55 px-3.5 py-1 font-display text-[10px] font-bold tracking-[0.18em] text-white/75 uppercase backdrop-blur-sm tabular-nums">
+        {String(idx + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Stylised browser-window mockup used as a screenshot placeholder. Renders a
+ * faux browser chrome (three traffic-light dots + URL bar) and abstract
+ * content lines so the modal feels finished before real screenshots exist.
+ * The `variant` index gently rotates the layout so a 2x2 grid doesn't look
+ * identical across cells.
+ */
+function ScreenshotPlaceholder({ variant = 0 }) {
+  // Four pre-mixed layout/tint combinations. Picked so adjacent cells in the
+  // grid (variants 0/1 in the top row, 2/3 in the bottom) have distinct
+  // accents and content shapes without going visually busy.
+  const layouts = [
+    { tint: "from-accent/[0.08]", bars: [80, 55, 70] },
+    { tint: "from-kpmg/[0.08]", bars: [70, 90, 50] },
+    { tint: "from-emerald-500/[0.06]", bars: [60, 75, 85] },
+    { tint: "from-violet/[0.08]", bars: [90, 60, 70] },
+  ];
+  const layout = layouts[variant % layouts.length];
+
+  return (
+    <div
+      className={`group relative overflow-hidden rounded-xl border border-white/[0.06] bg-gradient-to-br ${layout.tint} via-[#0d0d0d] to-[#0a0a0a] transition-all duration-300 hover:border-white/[0.12]`}
+    >
+      <div className="aspect-video w-full">
+        {/* Faux browser chrome */}
+        <div className="flex items-center gap-1.5 border-b border-white/[0.05] bg-black/30 px-3 py-2">
+          <span className="h-2 w-2 rounded-full bg-white/15" />
+          <span className="h-2 w-2 rounded-full bg-white/10" />
+          <span className="h-2 w-2 rounded-full bg-white/[0.06]" />
+          <span className="ms-2 h-1.5 flex-1 rounded-full bg-white/[0.04]" />
+        </div>
+
+        {/* Abstract content body */}
+        <div className="flex h-[calc(100%-2rem)] flex-col gap-2.5 p-4">
+          <div className="flex items-center gap-2">
+            <span className="h-5 w-5 rounded-md bg-white/[0.06]" />
+            <span className="h-2 w-24 rounded-full bg-white/[0.08]" />
+          </div>
+          <div className="mt-1 space-y-1.5">
+            {layout.bars.map((width, i) => (
+              <span
+                key={i}
+                className="block h-1.5 rounded-full bg-white/[0.05]"
+                style={{ width: `${width}%` }}
+              />
+            ))}
+          </div>
+          <div className="mt-auto flex gap-2">
+            <span className="h-6 w-16 rounded-md bg-accent/[0.15]" />
+            <span className="h-6 w-12 rounded-md bg-white/[0.04]" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -730,6 +1358,10 @@ function Products() {
   const [ref, inView] = useInView();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState(null);
+  // `null` represents the "All Industries" pill — every product passes the
+  // filter. Otherwise an industry slug from data/industries.js.
+  const [industryFilter, setIndustryFilter] = useState(null);
 
   useEffect(() => {
     apiGetProducts()
@@ -740,6 +1372,16 @@ function Products() {
 
   // Pick a per-row text field in the active locale, falling back to English.
   const pick = (p, field) => p[`${field}_${lang}`] || p[`${field}_en`];
+
+  // Apply the industry filter. A product with no industries assigned is
+  // treated as "general" — visible under "All Industries" only, not under
+  // any specific industry filter. This avoids untagged legacy products
+  // accidentally polluting every industry view.
+  const filteredProducts = industryFilter
+    ? products.filter(
+        (p) => Array.isArray(p.industries) && p.industries.includes(industryFilter)
+      )
+    : products;
 
   return (
     <section id="products" className="relative bg-[#0a0a0a] py-28 lg:py-36">
@@ -763,16 +1405,48 @@ function Products() {
           </p>
         </Reveal>
 
+        {/* Industry filter pills. Single-select with explicit "All"
+            default — clicking "All" or the active pill again clears the
+            filter. Order matches data/industries.js. */}
+        <Reveal delay={280}>
+          <div className="mt-10 flex flex-wrap items-center gap-2">
+            <span className="me-2 font-display text-[10px] font-bold tracking-[0.22em] text-white/30 uppercase">
+              {t("industries.filterLabel")}
+            </span>
+            <IndustryPill
+              active={industryFilter === null}
+              label={t("industries.all")}
+              onClick={() => setIndustryFilter(null)}
+            />
+            {INDUSTRIES.map((slug) => (
+              <IndustryPill
+                key={slug}
+                active={industryFilter === slug}
+                label={t(`industries.${slug}`)}
+                onClick={() =>
+                  setIndustryFilter((cur) => (cur === slug ? null : slug))
+                }
+              />
+            ))}
+          </div>
+        </Reveal>
+
         <div
           ref={ref}
-          className="mt-16 grid gap-5 grid-cols-1"
+          className="mt-10 grid gap-5 grid-cols-1"
         >
           {loading ? (
             <div className="flex justify-center py-16">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent/20 border-t-accent" />
             </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.015] px-6 py-14 text-center">
+              <p className="text-[13px] text-white/40">
+                {t("products.noResultsForIndustry")}
+              </p>
+            </div>
           ) : (
-            products.map((product, i) => (
+            filteredProducts.map((product, i) => (
               <div
                 key={product.id}
                 className={`transition-all duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -784,19 +1458,42 @@ function Products() {
               >
                 <ProductCard
                   icon={getProductIcon(product.icon_name)}
-                  slug={product.slug}
                   isLive={true}
                   title={pick(product, "title")}
                   description={pick(product, "description")}
                   status={t("products.statusLive")}
                   learnMoreLabel={t("products.learnMore")}
+                  onClick={() => setSelected(product)}
                 />
               </div>
             ))
           )}
         </div>
       </div>
+
+      <ProductDetailModal product={selected} onClose={() => setSelected(null)} />
     </section>
+  );
+}
+
+/**
+ * Pill button used in the industry filter strip. Single-select semantics —
+ * the parent decides what "active" means; this component just renders the
+ * two visual states.
+ */
+function IndustryPill({ active, label, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-4 py-1.5 font-display text-[11px] font-bold tracking-[0.08em] uppercase transition-all duration-200 cursor-pointer ${
+        active
+          ? "border-accent/40 bg-accent/[0.12] text-accent shadow-[0_0_0_3px_rgba(0,145,218,0.06)]"
+          : "border-white/[0.08] bg-white/[0.015] text-white/45 hover:border-white/15 hover:bg-white/[0.04] hover:text-white/75"
+      }`}
+    >
+      {label}
+    </button>
   );
 }
 

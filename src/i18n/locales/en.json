@@ -37,32 +37,121 @@
     "eyebrow": "What We Do",
     "title": "Our Services",
     "intro": "Six integrated service pillars that take organizations from AI ambition to enterprise-scale impact.",
+    "approachLabel": "Our approach",
+    "deliverablesLabel": "What you get",
+    "learnMoreLabel": "Learn more",
+    "closeLabel": "Close",
     "items": {
       "readiness": {
         "title": "AI Readiness Assessment",
-        "description": "Evaluate your organization's maturity, infrastructure, talent, and governance readiness to adopt AI at scale."
+        "description": "Evaluate your organization's maturity, infrastructure, talent, and governance readiness to adopt AI at scale.",
+        "details": "A structured maturity assessment across five dimensions — strategy, data, talent, infrastructure, and governance — gives you an objective baseline benchmarked against regional and global peers, plus a prioritized action plan you can take straight to the board.",
+        "phases": [
+          { "name": "Discover", "caption": "Stakeholder interviews and document review across business and IT." },
+          { "name": "Assess", "caption": "Score five dimensions: strategy, data, talent, infrastructure, governance." },
+          { "name": "Benchmark", "caption": "Compare against regional and global peers in your sector." },
+          { "name": "Roadmap", "caption": "Prioritized 90-day, 6-month, and 12-month action plan." }
+        ],
+        "bullets": [
+          "Maturity scorecard benchmarked against industry peers",
+          "Capability gap analysis and target operating model",
+          "Prioritized 90-day, 6-month, and 12-month roadmap",
+          "Executive-ready briefing pack and governance recommendations"
+        ]
       },
       "strategies": {
         "title": "AI Strategies",
-        "description": "Define a tailored AI roadmap aligned with your national and organizational objectives, from vision to execution."
+        "description": "Define a tailored AI roadmap aligned with your national and organizational objectives, from vision to execution.",
+        "details": "We translate executive ambition into a concrete AI strategy aligned to national agendas and your sector's competitive realities — sequenced into a portfolio of use cases your teams can actually deliver, with the operating model and funding to back it.",
+        "phases": [
+          { "name": "Frame", "caption": "Co-create the AI ambition with your executive team and board." },
+          { "name": "Prioritize", "caption": "Rank use cases by value, feasibility, and risk." },
+          { "name": "Architect", "caption": "Define org structure, governance, funding, and partnerships." },
+          { "name": "Sequence", "caption": "Multi-year delivery roadmap with measurable KPIs and milestones." }
+        ],
+        "bullets": [
+          "Vision, ambition statement, and value-pool sizing",
+          "Use-case portfolio prioritized by feasibility and ROI",
+          "Operating model, governance, and funding blueprint",
+          "Multi-year delivery roadmap with measurable KPIs"
+        ]
       },
       "platforms": {
         "title": "AI Platforms",
-        "description": "Design and implement enterprise-grade AI platforms that enable scalable model development, deployment, and monitoring."
+        "description": "Design and implement enterprise-grade AI platforms that enable scalable model development, deployment, and monitoring.",
+        "details": "We design and stand up the production-grade platform — MLOps, feature stores, vector databases, model serving, and observability — so your data-science teams can ship and operate dozens of models without re-inventing the plumbing for every project.",
+        "phases": [
+          { "name": "Design", "caption": "Reference architecture aligned to your cloud and security posture." },
+          { "name": "Select", "caption": "Choose the right MLOps, feature store, and serving stack." },
+          { "name": "Build", "caption": "Stand up registries, pipelines, and observability instrumentation." },
+          { "name": "Operate", "caption": "Enable the platform team with runbooks and SRE practices." }
+        ],
+        "bullets": [
+          "Reference architecture aligned to your cloud and security posture",
+          "MLOps, feature store, and vector-database stack selection",
+          "Model registry, serving, and observability instrumentation",
+          "Platform team enablement and operating runbooks"
+        ]
       },
       "factories": {
         "title": "AI Factories",
-        "description": "Operationalize AI delivery through industrialized, repeatable frameworks — from data pipelines to model lifecycle management."
+        "description": "Operationalize AI delivery through industrialized, repeatable frameworks — from data pipelines to model lifecycle management.",
+        "details": "We industrialize AI delivery with reusable templates, shared components, and a lifecycle that takes ideas from prototype to production in weeks — not quarters — and keeps every model under continuous evaluation once it lands.",
+        "phases": [
+          { "name": "Standardize", "caption": "Codify lifecycle gates, quality bars, and documentation rules." },
+          { "name": "Templatize", "caption": "Build reusable pipelines, components, and project blueprints." },
+          { "name": "Industrialize", "caption": "Run delivery squads against shared components and patterns." },
+          { "name": "Scale", "caption": "Continuous evaluation and capability uplift across teams." }
+        ],
+        "bullets": [
+          "Standardized data, training, and deployment pipelines",
+          "Reusable component library and project blueprints",
+          "Lifecycle gates from discovery to retirement",
+          "Squad enablement and capability building"
+        ]
       },
       "solutions": {
         "title": "AI Solutions",
-        "description": "Deliver purpose-built AI applications that solve real business problems — from intelligent automation to predictive analytics."
+        "description": "Deliver purpose-built AI applications that solve real business problems — from intelligent automation to predictive analytics.",
+        "details": "We build purpose-built AI applications — agents, copilots, predictive engines, and intelligent automations — targeted at the specific business problems where AI delivers measurable, repeatable value, and we run them all the way to production with continuous evaluation in place.",
+        "phases": [
+          { "name": "Frame", "caption": "Pinpoint the business problem, users, and success metrics." },
+          { "name": "Build", "caption": "Develop the agent, copilot, or predictive engine end-to-end." },
+          { "name": "Validate", "caption": "Pilot with real users and measure against the baseline." },
+          { "name": "Deploy", "caption": "Production rollout with monitoring and feedback loops." }
+        ],
+        "bullets": [
+          "Agentic copilots and domain-specific assistants",
+          "Predictive analytics and forecasting models",
+          "Intelligent document and content automation",
+          "Production deployment with continuous evaluation"
+        ]
       },
       "cloud": {
         "title": "Cloud",
-        "description": "Architect and manage secure, scalable cloud infrastructure — from migration strategy to multi-cloud governance and cost optimization."
+        "description": "Architect and manage secure, scalable cloud infrastructure — from migration strategy to multi-cloud governance and cost optimization.",
+        "details": "We design, migrate, and operate cloud foundations — landing zones, networking, identity, FinOps, and multi-cloud governance — so your AI and data workloads run on a secure, cost-efficient base from day one and stay that way as they scale.",
+        "phases": [
+          { "name": "Strategize", "caption": "Cloud strategy, business case, and target operating model." },
+          { "name": "Design", "caption": "Secure landing zones, IAM, and network architecture." },
+          { "name": "Migrate", "caption": "Move workloads with the migration factory and modernize." },
+          { "name": "Optimize", "caption": "Ongoing FinOps, governance, and continuous cost optimization." }
+        ],
+        "bullets": [
+          "Cloud strategy, business case, and target architecture",
+          "Secure landing zones, IAM, and network design",
+          "Migration factory and workload modernization",
+          "FinOps, governance, and ongoing cost optimization"
+        ]
       }
     }
+  },
+  "industries": {
+    "all": "All Industries",
+    "filterLabel": "Filter by industry",
+    "public-sector": "Public Sector",
+    "financial-services": "Financial Services",
+    "energy-resources": "Energy & Natural Resources"
   },
   "products": {
     "eyebrow": "What We Build",
@@ -71,6 +160,71 @@
     "statusLive": "Live",
     "launch": "Launch Application",
     "learnMore": "Learn More",
+    "noResultsForIndustry": "No products tagged for this industry yet.",
+    "modal": {
+      "approachLabel": "How it works",
+      "deliverablesLabel": "Key capabilities",
+      "screenshotsLabel": "Screenshots",
+      "downloadPresentation": "Download Sample"
+    },
+    "bySlug": {
+      "creative-content": {
+        "phases": [
+          { "name": "Brief", "caption": "Describe the deck or upload a short brief in plain language." },
+          { "name": "Generate", "caption": "AI assembles slides from the curated KPMG template library." },
+          { "name": "Review", "caption": "Edit, re-run, or swap sections until the deck reads exactly right." },
+          { "name": "Export", "caption": "Download a fully branded, presentation-ready PowerPoint." }
+        ],
+        "deliverables": [
+          "AI-generated narrative tuned to the brief",
+          "Curated KPMG template library",
+          "Brand-compliant typography and layout",
+          "Editable slides ready to refine"
+        ]
+      },
+      "data-owner": {
+        "phases": [
+          { "name": "Discover", "caption": "Connect your data assets and let the agent profile them continuously." },
+          { "name": "Classify", "caption": "Auto-suggested classifications, business definitions, and PII flags." },
+          { "name": "Validate", "caption": "Owners review and approve in a single console — no spreadsheets." },
+          { "name": "Govern", "caption": "Continuous monitoring of quality, lineage, and PII drift." }
+        ],
+        "deliverables": [
+          "Continuous asset profiling across sources",
+          "Auto-suggested classification and definitions",
+          "PII detection across structured and semi-structured data",
+          "Quality rules generated from observed patterns"
+        ]
+      },
+      "compliance": {
+        "phases": [
+          { "name": "Encode", "caption": "Each regulation codified as a machine-readable ruleset, kept up to date." },
+          { "name": "Scan", "caption": "Continuous checks against your live policies, controls, and data flows." },
+          { "name": "Map", "caption": "Findings pre-mapped to NDMO, PDPL, SAMA, DGA, and SDAIA clauses." },
+          { "name": "Remediate", "caption": "Audit-ready evidence trails and remediation guidance." }
+        ],
+        "deliverables": [
+          "Multi-framework ruleset (NDMO, PDPL, SAMA, DGA, SDAIA)",
+          "Continuous compliance scanning",
+          "Pre-mapped regulatory findings",
+          "Audit-ready evidence trails"
+        ]
+      },
+      "ea-arch": {
+        "phases": [
+          { "name": "Ingest", "caption": "Pulls your existing architecture inventory and capability map." },
+          { "name": "Generate", "caption": "Drafts target-state blueprints, capability mappings, and ADRs." },
+          { "name": "Review", "caption": "Architects refine and sign off in minutes, not weeks." },
+          { "name": "Refresh", "caption": "Re-runs on schedule and flags drift between artefacts and reality." }
+        ],
+        "deliverables": [
+          "Target-state architecture blueprints",
+          "Capability-to-system mapping",
+          "Architecture Decision Records (ADRs)",
+          "Drift detection on a recurring schedule"
+        ]
+      }
+    },
     "items": {
       "creativeContent": {
         "title": "Creative Content Agent",
@@ -302,10 +456,14 @@
       "url": "External URL",
       "videoUrl": "Video URL",
       "screenshots": "Screenshots",
+      "presentation": "Sample PowerPoint",
+      "industries": "Industries",
       "title": "Title",
       "description": "Short description",
       "problem": "Problem statement",
       "solution": "Solution / how it works",
+      "phases": "How it works",
+      "deliverables": "Key capabilities",
       "sortOrder": "Sort order",
       "visibility": "Visibility"
     },
@@ -313,8 +471,36 @@
       "slug": "URL-safe identifier. Cannot be changed after creation.",
       "url": "Where the \"Open Application\" button takes the user (new tab).",
       "videoUrl": "Optional. Embeddable URL (e.g. YouTube /embed/...).",
-      "screenshots": "One image URL per line. Leave empty to show a placeholder.",
+      "screenshots": "Drag images in or click to browse. PNG / JPG / WebP, up to 1.5MB each.",
+      "presentation": "Optional .pptx file users can download from the product modal.",
+      "industries": "Tag this product so it appears under the matching industry filter on the landing page. Pick all that apply.",
+      "phases": "4 numbered phase cards on the modal. Name + caption per row.",
+      "deliverables": "4 capability statements rendered as check-mark cards.",
       "sortOrder": "Lower numbers appear first."
+    },
+    "placeholders": {
+      "phaseName": "Phase name (e.g. Brief)",
+      "phaseCaption": "One-line caption explaining this phase",
+      "deliverable": "Capability statement (one line)"
+    },
+    "screenshots": {
+      "dropPrimary": "Drop screenshots here or click to browse",
+      "dropSecondary": "PNG, JPG, WebP, GIF — up to 1.5MB each",
+      "removeAriaLabel": "Remove screenshot",
+      "errorNotImage": "{name} is not an image file",
+      "errorTooLarge": "{name} exceeds the 1.5MB limit",
+      "errorRead": "Could not read the selected file"
+    },
+    "presentation": {
+      "dropPrimary": "Drop .pptx file here or click to browse",
+      "dropSecondary": "PowerPoint — up to 25MB",
+      "removeAriaLabel": "Remove presentation",
+      "replace": "Replace",
+      "currentlyAttached": "Currently attached",
+      "willUpload": "New file — will replace on save",
+      "errorNotPpt": "{name} is not a PowerPoint file",
+      "errorTooLarge": "{name} exceeds the 25MB limit",
+      "errorRead": "Could not read the selected file"
     }
   },
   "errors": {

@@ -4,3 +4,11 @@ services:
     ports:
       - "3005:80"
     restart: unless-stopped
+    networks:
+      - default
+      - auth_net
+
+networks:
+  auth_net:
+    external: true
+    name: auth-service_default
