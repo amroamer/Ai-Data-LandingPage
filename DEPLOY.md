@@ -143,6 +143,34 @@ products that existed before those columns did.
 Migrations are the right tool for any data that needs to land in
 already-running databases. They run automatically on the next deploy.
 
+### Syncing the server to your local DB (incl. screenshots)
+
+If you've been editing products locally (uploading screenshots, tweaking
+copy, etc.) and want the server to mirror your local state on the next
+deploy, run:
+
+```bash
+python scripts/snapshot_products.py
+```
+
+The helper:
+
+  - Walks `auth-service/alembic/versions/`, finds the highest existing
+    migration number, computes the next one (e.g. `0007` → `0008`).
+  - Dumps every row from the live `shared-db` container to
+    `0NNN_products_snapshot.json` next to the migration.
+  - Generates `0NNN_products_snapshot.py` with the correct
+    `down_revision` chained to the previous head.
+  - Prints the exact `git add` / `commit` / `push` commands.
+
+Once committed and pushed, the next `./deploy.sh` on the server applies
+the snapshot via `alembic upgrade head` and the server's products end
+up byte-identical to local.
+
+Each snapshot migration runs **once** per environment (Alembic tracks
+applied revisions), so the helper produces a fresh revision every time —
+re-running it doesn't overwrite the previous snapshot.
+
 ## Manual escape hatches
 
 ```bash
