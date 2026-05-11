@@ -444,6 +444,7 @@
     "englishSection": "English content",
     "arabicSection": "المحتوى بالعربية",
     "columns": {
+      "number": "#",
       "title": "Product",
       "slug": "Slug",
       "order": "Order",

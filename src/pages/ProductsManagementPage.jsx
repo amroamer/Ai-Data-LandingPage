@@ -941,8 +941,12 @@ export default function ProductsManagementPage() {
         </div>
 
         <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-[#111111]">
-          {/* Header */}
-          <div className="hidden border-b border-white/[0.04] px-6 py-3 md:grid md:grid-cols-[40px_2fr_1.2fr_70px_70px_180px] md:items-center md:gap-4">
+          {/* Header. The leading 36px column is the row number, then 40px
+              for the icon, then the wider content columns. */}
+          <div className="hidden border-b border-white/[0.04] px-6 py-3 md:grid md:grid-cols-[36px_40px_2fr_1.2fr_70px_70px_180px] md:items-center md:gap-4">
+            <div className="text-[10px] font-bold tracking-[0.15em] text-white/20 uppercase">
+              {t("productsAdmin.columns.number")}
+            </div>
             <div />
             {["title", "slug", "order", "status", "actions"].map((col) => (
               <div
@@ -961,13 +965,16 @@ export default function ProductsManagementPage() {
             </div>
           )}
 
-          {products.map((p) => {
+          {products.map((p, i) => {
             const Icon = getProductIcon(p.icon_name);
             return (
               <div
                 key={p.id}
-                className="border-b border-white/[0.04] last:border-b-0 px-6 py-4 md:grid md:grid-cols-[40px_2fr_1.2fr_70px_70px_180px] md:items-center md:gap-4"
+                className="border-b border-white/[0.04] last:border-b-0 px-6 py-4 md:grid md:grid-cols-[36px_40px_2fr_1.2fr_70px_70px_180px] md:items-center md:gap-4"
               >
+                <div className="font-display text-[12px] font-bold tabular-nums text-white/35">
+                  {i + 1}
+                </div>
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent/[0.06] text-accent">
                   <Icon size={18} strokeWidth={1.5} />
                 </div>
