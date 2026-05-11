@@ -1069,11 +1069,12 @@ function ProductDetailModal({ product, onClose }) {
                 />
               </a>
 
-              {/* Download button — only rendered when the product has a
-                  presentation attached. Hits the dedicated PPT endpoint
-                  which streams the file with a Content-Disposition header
-                  so the browser saves it instead of navigating to it. */}
-              {product.ppt_filename && (
+              {/* Download button — temporarily hidden via the leading
+                  `false &&` while the PPT upload flow is still in
+                  development. To re-enable: drop the `false &&`. The
+                  underlying backend endpoint and admin-form upload
+                  widget stay live regardless of this flag. */}
+              {false && product.ppt_filename && (
                 <a
                   href={`/auth/api/products/${product.slug}/ppt`}
                   download={product.ppt_filename}
